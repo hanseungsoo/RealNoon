@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DBHandler {
     private NoonDatabase helper;
@@ -35,6 +36,7 @@ public class DBHandler {
         helper.close();
     }
 
+
     public String selectfood(String local) throws SQLException {
         Cursor cursor= null;
         ArrayList<Integer> weight = new ArrayList<>();
@@ -45,14 +47,14 @@ public class DBHandler {
         for(int i=0; i<staticMerge.food.size();i++){
             food = staticMerge.food.get(i);
             cursor = db.rawQuery("select * from food_favorite where local_name = '" + local + "' and food = '" + food + "';", null);
-            if (cursor != null) {
+            if (cursor.getCount() > 0 ) {
                 cursor.moveToFirst();
             }else{
                 cursor = db.rawQuery("select * from food_favorite where food = '" + food + "';", null);
-                    if(cursor == null){
-                        return null;
-                    }else{
+                    if(cursor.getCount() > 0 ){
                         cursor.moveToFirst();
+                    }else{
+                        return "편의점";
                 }
             }
             Log.i("aaaa","3"+cursor.getCount());

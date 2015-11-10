@@ -28,9 +28,9 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
     protected void onPostExecute(Void aVoid) {
 
         DBHandler dh = DBHandler.open(MainActivity.mContext);
-        staticMerge.finish_food = dh.selectfood(staticMerge.dong);
-        if(staticMerge.finish_food.equals("")){
-            staticMerge.finish_food = "편의점";
+        staticMerge.finish_food[0] = dh.selectfood(staticMerge.dong);
+        if(staticMerge.finish_food[0].equals("")){
+            staticMerge.finish_food[0] = "편의점";
         }
         try{
             LocationManager locationManager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -41,12 +41,20 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             double longitude = location.getLongitude();
 
             Searcher searcher1 = new Searcher();
-            searcher1.searchKeyword(MainActivity.mContext, "편의점", latitude, longitude, radius, page, 2, "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
+            searcher1.searchKeyword(MainActivity.mContext, staticMerge.finish_food[1], latitude, longitude, radius, page, 2, "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
                 @Override
                 public void onSuccess(List<Item> itemList) {
-
-                    MainActivity.ThemaItem.add(0, itemList.get(0));
-
+                    if(itemList.size() == 0){
+                        Item item = new Item();
+                        item.title = "주변에";
+                        item.category = "음식점이 없습니다.";
+                        item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+                        item.address = "(X)address";
+                        item.phone = "추천할만한";
+                        MainActivity.ThemaItem.set( 0 , item);
+                    }else{
+                        MainActivity.ThemaItem.set(0,itemList.get(0));
+                    }
                 }
 
                 @Override
@@ -54,10 +62,20 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                 }
             });
             Searcher searcher2 = new Searcher();
-            searcher2.searchKeyword(MainActivity.mContext, staticMerge.finish_food, latitude, longitude, radius, page, 2, "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
+            searcher2.searchKeyword(MainActivity.mContext, staticMerge.finish_food[0], latitude, longitude, radius, page, 2, "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
                 @Override
                 public void onSuccess(List<Item> itemList) {
-                    MainActivity.ThemaItem.add(1, itemList.get(0));
+                    if(itemList.size() == 0){
+                        Item item = new Item();
+                        item.title = "주변에";
+                        item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+                        item.category = "음식점이 없습니다.";
+                        item.address = "(X)address";
+                        item.phone = "추천할만한";
+                        MainActivity.ThemaItem.set( 1 , item);
+                    }else{
+                        MainActivity.ThemaItem.set(1, itemList.get(0));
+                    }
                 }
 
                 @Override
@@ -68,7 +86,17 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             searcher3.searchCategory(MainActivity.mContext, "FD6", latitude, longitude, radius, page, 2, "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
                 @Override
                 public void onSuccess(List<Item> itemList) {
-                    MainActivity.ThemaItem.add(2, itemList.get(0));
+                    if(itemList.size() == 0){
+                        Item item = new Item();
+                        item.title = "주변에";
+                        item.category = "음식점이 없습니다.";
+                        item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+                        item.address = "(X)address";
+                        item.phone = "추천할만한";
+                        MainActivity.ThemaItem.set( 2 , item);
+                    }else{
+                        MainActivity.ThemaItem.set(2, itemList.get(0));
+                    }
                 }
 
                 @Override
@@ -79,7 +107,18 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             searcher4.searchCategory(MainActivity.mContext, "FD6", latitude, longitude, radius, 1, (int) (Math.random() * 3), "9db6272582177f1d7b0643e35e1993e9", new OnFinishSearchListener() {
                 @Override
                 public void onSuccess(List<Item> itemList) {
-                    MainActivity.ThemaItem.add(3, itemList.get((int) (Math.random() * 15)));
+
+                    if(itemList.size() == 0){
+                        Item item = new Item();
+                        item.title = "주변에";
+                        item.category = "음식점이 없습니다.";
+                        item.address = "(X)address";
+                        item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+                        item.phone = "추천할만한";
+                        MainActivity.ThemaItem.set( 3 , item);
+                    }else{
+                        MainActivity.ThemaItem.set(3, itemList.get((int) (Math.random() * 15)));
+                    }
                 }
 
                 @Override
@@ -152,6 +191,126 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             String exceptionAsStrting = sw.toString();
             Log.e("aaaa", exceptionAsStrting);
         }
+
+
+        String food_nameAnniv = "";
+        try {
+            Log.i("aaaa", "-----출출2" + params[1]);
+            URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[1]);
+            URLConnection conn = (HttpURLConnection) url.openConnection();
+            HttpURLConnection http = (HttpURLConnection) conn;
+
+            http.setChunkedStreamingMode(0);
+            http.setDoInput(true);
+            http.setDoOutput(true);
+            http.setRequestMethod("POST");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream(), "UTF-8"));
+            //InputStream in = http.getInputStream();
+            StringBuffer sb = new StringBuffer();
+            try {
+                int chr;
+                while ((chr = in.read()) != -1) {
+                    sb.append((char) chr);
+                }
+                myResult = sb.toString();
+                Log.i("aaaa", myResult);
+            } finally {
+                in.close();
+            }
+            try {
+                JSONObject root = new JSONObject(myResult);
+                JSONArray jarr = root.getJSONArray("Food");
+                for (int i = 0; i < jarr.length(); i++) {
+                    JSONObject json = new JSONObject();
+                    json = jarr.getJSONObject(i);
+                    food_nameAnniv = json.getString("food_name");
+                    Log.i("aaaa", food_nameAnniv);
+                }
+
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionAsStrting = sw.toString();
+                Log.e("aaaa", exceptionAsStrting);
+            }
+
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionAsStrting = sw.toString();
+            Log.e("aaaa", exceptionAsStrting);
+        }
+        if(food_nameAnniv.equals("No")){
+            try {
+                Log.i("aaaa", "-----출출3" + params[2]);
+                URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[2]);
+                URLConnection conn = (HttpURLConnection) url.openConnection();
+                HttpURLConnection http = (HttpURLConnection) conn;
+
+                http.setChunkedStreamingMode(0);
+                http.setDoInput(true);
+                http.setDoOutput(true);
+                http.setRequestMethod("POST");
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(http.getInputStream(), "UTF-8"));
+                //InputStream in = http.getInputStream();
+
+                StringBuffer sb = new StringBuffer();
+                try {
+                    int chr;
+                    while ((chr = in.read()) != -1) {
+                        sb.append((char) chr);
+                    }
+                    myResult = sb.toString();
+                    Log.i("aaaa", myResult);
+                } finally {
+                    in.close();
+                }
+                try {
+                    JSONObject root = new JSONObject(myResult);
+                    JSONArray jarr = root.getJSONArray("Food");
+                    food_nameAnniv = "";
+                    for (int i = 0; i < jarr.length(); i++) {
+                        JSONObject json = new JSONObject();
+                        json = jarr.getJSONObject(i);
+                        food_nameAnniv = json.getString("food_name");
+                        Log.i("aaaa", food_nameAnniv);
+                    }
+
+                } catch (Exception e) {
+                    StringWriter sw = new StringWriter();
+                    e.printStackTrace(new PrintWriter(sw));
+                    String exceptionAsStrting = sw.toString();
+                    Log.e("aaaa", exceptionAsStrting);
+                }
+
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionAsStrting = sw.toString();
+                Log.e("aaaa", exceptionAsStrting);
+            }
+            if(food_nameAnniv.equals("No")){
+                Item item = new Item();
+                item.title = "오늘은";
+                item.category = "없습니다";
+                item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+                item.address = "(X)address";
+                item.phone = "기념일이";
+                MainActivity.ThemaItem.add( 0, item);
+            }else{
+                staticMerge.finish_food[1]=food_nameAnniv;
+            }
+        }else{
+            staticMerge.finish_food[1]=food_nameAnniv;
+        }
+
+
+
+
+
+
         staticMerge.food = foodDB;
         return null;
     }

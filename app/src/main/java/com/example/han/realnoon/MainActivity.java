@@ -79,7 +79,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             rA.registerDong("Detailaddr");
 
         }
-        rA.testAM("ACTION.GET.ONE",22,11);
+        rA.testAM("ACTION.GET.ONE",0,54);
 
         //바인딩
         actionbar = getActionBar();
@@ -335,8 +335,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     public void make_dummy() {
-        ArrayList<Item> wg;
-        wg = new ArrayList<Item>();
+
         for (int i=1; i<5;i++) {
             Item item = new Item();
             item.title = "(X)title"+i;
@@ -344,9 +343,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             item.address = "(X)address"+i;
             item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
             item.phone = "010-2043-5392";
-            wg.add(item);
+            ThemaItem.add(i-1,item);
         }
-        ThemaItem = wg;
     }
 
     public static void mmmm() {

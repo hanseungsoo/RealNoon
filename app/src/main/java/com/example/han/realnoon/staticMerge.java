@@ -9,6 +9,6 @@ public class staticMerge {
     static String temp="rain";
     static String what="nothing";
     static String dong = "";
-    static String finish_food= "";
+    static String[] finish_food = new String[2];
     static ArrayList<String> food = new ArrayList<>();
 }
