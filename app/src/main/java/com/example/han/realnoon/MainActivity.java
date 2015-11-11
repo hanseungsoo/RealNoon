@@ -1,14 +1,22 @@
 package com.example.han.realnoon;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -32,9 +40,12 @@ import net.daum.mf.map.api.MapView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
-public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity {
+
+
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -46,13 +57,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public static Context mContext;
     ActionBar actionbar;
     MapView mapView;
-
-    //UI
     TextView nameTv = null;
     TextView telTv = null;
     TextView cateTv = null;
     TextView addrTv = null;
     ImageView foodImg = null;
+    ViewGroup mapViewContainer = null;
+    static Handler mHandler;
+
     //Data
     public static ArrayList<Item> ThemaItem = new ArrayList<Item>();
 
@@ -79,21 +91,40 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             rA.registerDong("Detailaddr");
 
         }
-        rA.testAM("ACTION.GET.ONE",0,54);
+        //rA.testAM("ACTION.GET.ONE",4,3);
+
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.SECOND, cal.get(Calendar.SECOND) + 10);
+            Intent intentMyService;
+            intentMyService = new Intent("ACTION.SET.NEWS");
+            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+            PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 0, intentMyService, 0);
+            // 서비스 시작
+            am.set(AlarmManager.RTC, cal.getTimeInMillis(), sender);
+        } catch (Exception e) {
+            Log.d("MpMainActivity", e.getMessage() + "");
+
+            e.printStackTrace();
+        }
+
+
+
+
 
         //바인딩
         actionbar = getActionBar();
-        nameTv = (TextView) findViewById(R.id.nameView);
-        telTv = (TextView) findViewById(R.id.telView);
-        cateTv = (TextView) findViewById(R.id.cateView);
-        addrTv = (TextView) findViewById(R.id.addrView);
-        foodImg = (ImageView) findViewById(R.id.cookImage);
+        nameTv = (TextView)findViewById(R.id.nameView);
+        telTv = (TextView)findViewById(R.id.telView);
+        cateTv = (TextView)findViewById(R.id.cateView);
+        addrTv = (TextView)findViewById(R.id.addrView);
+        foodImg = (ImageView)findViewById(R.id.cookImage);
 
 
         // MapView
         mapView = new MapView(this);
         mapView.setDaumMapApiKey("9db6272582177f1d7b0643e35e1993e9");
-        ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
 
 
@@ -145,7 +176,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         for (String tab_name : tabs) {
             actionbar.addTab(actionbar.newTab().setText(tab_name)
-                    .setTabListener(this));
+                    .setTabListener(new TabListen()));
         }
         if(noonWidget.CLICK_FLAG == true) {
             int position = noonWidget.themaValue;
@@ -153,6 +184,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             noonWidget.CLICK_FLAG = false;
         }
 
+        mHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                mapViewContainer.removeView(mapView);
+                setContentView(R.layout.activity_news);
+                setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
+                TextView newstitle = (TextView)findViewById(R.id.newsTitle);
+                newstitle.setText(GetNewsData.titlevec.get(0).toString());
+            }
+        };
 
     }
 
@@ -192,7 +233,29 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
+            if(position == 0){
+                setContentView(R.layout.activity_main);
+                nameTv = (TextView)findViewById(R.id.nameView);
+                telTv = (TextView)findViewById(R.id.telView);
+                cateTv = (TextView)findViewById(R.id.cateView);
+                addrTv = (TextView)findViewById(R.id.addrView);
+                foodImg = (ImageView)findViewById(R.id.cookImage);
+                mapView = new MapView(MainActivity.this);
+                mapView.setDaumMapApiKey("9db6272582177f1d7b0643e35e1993e9");
+                mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+                mapViewContainer.addView(mapView);
+
+                actionbar.removeAllTabs();
+                setDrawer(ActionBar.NAVIGATION_MODE_TABS);
+                for (String tab_name : tabs) {
+                    actionbar.addTab(actionbar.newTab().setText(tab_name)
+                            .setTabListener(new TabListen()));
+                }
+            }else if(position ==3) {
+                mapViewContainer.removeView(mapView);
+                setContentView(R.layout.activity_news);
+                setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
+            }
         }
     }
     private void selectItem(int position) {
@@ -217,102 +280,160 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-        MapPOIItem marker;
-        Item in1;
-        int position = tab.getPosition();
 
 
-        int size = ThemaItem.size();
-        switch (position) {
-            case 0:
-                if(size>=1) {
-                    Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
-                    in1 = ThemaItem.get(0);
-                    marker = new MapPOIItem();
-                    nameTv.setText("" + in1.title);
-                    telTv.setText("" + in1.phone);
-                    cateTv.setText("" + in1.category);
-                    addrTv.setText("" + in1.address);
-                    new DownloadImageTask().execute(in1.imageUrl);
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
-                    mapView.addPOIItem(marker);
-                }
-                break;
-            case 1:
-                if(size >=2) {
-                    Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
-                    in1 = ThemaItem.get(1);
-                    marker = new MapPOIItem();
-                    nameTv.setText("" + in1.title);
-                    telTv.setText("" + in1.phone);
-                    cateTv.setText("" + in1.category);
-                    addrTv.setText("" + in1.address);
-                    new DownloadImageTask().execute(in1.imageUrl);
+    public void make_dummy() {
 
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
-                    mapView.addPOIItem(marker);
-                }
-                break;
-            case 2:
-                if(size >=3) {
-                    Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
-                    in1 = ThemaItem.get(2);
-                    marker = new MapPOIItem();
-                    nameTv.setText("" + in1.title);
-                    telTv.setText("" + in1.phone);
-                    cateTv.setText("" + in1.category);
-                    addrTv.setText("" + in1.address);
-                    new DownloadImageTask().execute(in1.imageUrl);
-
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
-                    mapView.addPOIItem(marker);
-                }
-                break;
-            case 3:
-                if(size >=4) {
-                    Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
-                    in1 = ThemaItem.get(3);
-                    marker = new MapPOIItem();
-                    nameTv.setText("" + in1.title);
-                    telTv.setText("" + in1.phone);
-                    cateTv.setText("" + in1.category);
-                    addrTv.setText("" + in1.address);
-                    new DownloadImageTask().execute(in1.imageUrl);
-
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
-                    mapView.addPOIItem(marker);
-                }
-                break;
+        for (int i=1; i<5;i++) {
+            Item item = new Item();
+            item.title = "(X)title"+i;
+            item.category = "(X)category"+i;
+            item.address = "(X)address"+i;
+            item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
+            item.phone = "010-2043-5392";
+            ThemaItem.add(i-1,item);
         }
     }
 
-    @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+    public static void mmmm() {
+        Context context = mContext.getApplicationContext();
+        Intent update = new Intent();
+        update.setAction("chae.widget.update");
+        context.sendBroadcast(update);
     }
 
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void setDrawer(int a){
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(a);
+        mTitle = mDrawerTitle = getTitle();
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+        mDrawerList.setAdapter(new ArrayAdapter<String>(MainActivity.this,
+                R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerToggle = new ActionBarDrawerToggle(
+                MainActivity.this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description for accessibility */
+                R.string.drawer_close  /* "close drawer" description for accessibility */
+        ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+    }
+    public class TabListen implements ActionBar.TabListener{
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            MapPOIItem marker;
+            Item in1;
+            int position = tab.getPosition();
 
 
+            int size = MainActivity.ThemaItem.size();
+            switch (position) {
+                case 0:
+                    if(size>=1) {
+                        Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
+                        in1 = MainActivity.ThemaItem.get(0);
+                        marker = new MapPOIItem();
+                        nameTv.setText("" + in1.title);
+                        telTv.setText("" + in1.phone);
+                        cateTv.setText("" + in1.category);
+                        addrTv.setText("" + in1.address);
+
+                        new DownloadImageTask().execute(in1.imageUrl);
+                        marker.setItemName("Default Marker");
+                        marker.setTag(0);
+                        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
+                        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+                        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
+                        mapView.addPOIItem(marker);
+                    }
+                    break;
+                case 1:
+                    if(size >=2) {
+                        Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
+                        in1 = MainActivity.ThemaItem.get(1);
+                        marker = new MapPOIItem();
+                        nameTv.setText("" + in1.title);
+                        telTv.setText("" + in1.phone);
+                        cateTv.setText("" + in1.category);
+                        addrTv.setText("" + in1.address);
+                        new DownloadImageTask().execute(in1.imageUrl);
+
+                        marker.setItemName("Default Marker");
+                        marker.setTag(0);
+                        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
+                        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+                        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
+                        mapView.addPOIItem(marker);
+                    }
+                    break;
+                case 2:
+                    if(size >=3) {
+                        Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
+                        in1 = MainActivity.ThemaItem.get(2);
+                        marker = new MapPOIItem();
+                        nameTv.setText("" + in1.title);
+                        telTv.setText("" + in1.phone);
+                        cateTv.setText("" + in1.category);
+                        addrTv.setText("" + in1.address);
+                        new DownloadImageTask().execute(in1.imageUrl);
+
+                        marker.setItemName("Default Marker");
+                        marker.setTag(0);
+                        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
+                        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+                        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
+                        mapView.addPOIItem(marker);
+                    }
+                    break;
+                case 3:
+                    if(size >=4) {
+                        Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
+                        in1 = MainActivity.ThemaItem.get(3);
+                        marker = new MapPOIItem();
+                        nameTv.setText("" + in1.title);
+                        telTv.setText("" + in1.phone);
+                        cateTv.setText("" + in1.category);
+                        addrTv.setText("" + in1.address);
+                        new DownloadImageTask().execute(in1.imageUrl);
+
+                        marker.setItemName("Default Marker");
+                        marker.setTag(0);
+                        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
+                        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+                        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude), true);
+                        mapView.addPOIItem(marker);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
     }
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
@@ -334,23 +455,4 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
     }
 
-    public void make_dummy() {
-
-        for (int i=1; i<5;i++) {
-            Item item = new Item();
-            item.title = "(X)title"+i;
-            item.category = "(X)category"+i;
-            item.address = "(X)address"+i;
-            item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
-            item.phone = "010-2043-5392";
-            ThemaItem.add(i-1,item);
-        }
-    }
-
-    public static void mmmm() {
-        Context context = mContext.getApplicationContext();
-        Intent update = new Intent();
-        update.setAction("chae.widget.update");
-        context.sendBroadcast(update);
-    }
 }

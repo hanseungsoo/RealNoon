@@ -31,5 +31,9 @@ public class settingBroadcast extends BroadcastReceiver {
             dbHandler.food_pattern_clean();
             dbHandler.close();
         }
+        if(intent.getAction().equals("ACTION.SET.NEWS")){
+            GetNewsData GND = new GetNewsData();
+            GND.execute();
+        }
     }
 }
