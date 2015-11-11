@@ -52,6 +52,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                         item.address = "(X)address";
                         item.phone = "추천할만한";
                         MainActivity.ThemaItem.set( 0 , item);
+                        MainActivity.mHandler.sendEmptyMessage(1);
                     }else{
                         MainActivity.ThemaItem.set(0,itemList.get(0));
                     }

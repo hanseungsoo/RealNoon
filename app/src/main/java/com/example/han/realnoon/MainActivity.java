@@ -91,7 +91,7 @@ public class MainActivity extends FragmentActivity {
             rA.registerDong("Detailaddr");
 
         }
-        //rA.testAM("ACTION.GET.ONE",4,3);
+        rA.testAM("ACTION.GET.ONE",14,18);
 
         try {
             Calendar cal = Calendar.getInstance();
@@ -187,11 +187,35 @@ public class MainActivity extends FragmentActivity {
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                mapViewContainer.removeView(mapView);
-                setContentView(R.layout.activity_news);
-                setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
-                TextView newstitle = (TextView)findViewById(R.id.newsTitle);
-                newstitle.setText(GetNewsData.titlevec.get(0).toString());
+                switch (msg.what){
+                    case 0:
+                        mapViewContainer.removeView(mapView);
+                        setContentView(R.layout.activity_news);
+                        setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
+                        TextView newstitle = (TextView)findViewById(R.id.newsTitle);
+                        newstitle.setText(GetNewsData.titlevec.get(0).toString());
+                        break;
+                    case 1:
+                        setContentView(R.layout.activity_main);
+                        nameTv = (TextView)findViewById(R.id.nameView);
+                        telTv = (TextView)findViewById(R.id.telView);
+                        cateTv = (TextView)findViewById(R.id.cateView);
+                        addrTv = (TextView)findViewById(R.id.addrView);
+                        foodImg = (ImageView)findViewById(R.id.cookImage);
+                        mapView = new MapView(MainActivity.this);
+                        mapView.setDaumMapApiKey("9db6272582177f1d7b0643e35e1993e9");
+                        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
+                        mapViewContainer.addView(mapView);
+
+                        actionbar.removeAllTabs();
+                        setDrawer(ActionBar.NAVIGATION_MODE_TABS);
+                        for (String tab_name : tabs) {
+                            actionbar.addTab(actionbar.newTab().setText(tab_name)
+                                    .setTabListener(new TabListen()));
+                        }
+                        break;
+                }
+
             }
         };
 
@@ -343,11 +367,11 @@ public class MainActivity extends FragmentActivity {
             Item in1;
             int position = tab.getPosition();
 
-
             int size = MainActivity.ThemaItem.size();
             switch (position) {
                 case 0:
                     if(size>=1) {
+                        mapView.removeAllPOIItems();
                         Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
                         in1 = MainActivity.ThemaItem.get(0);
                         marker = new MapPOIItem();
@@ -367,6 +391,7 @@ public class MainActivity extends FragmentActivity {
                     break;
                 case 1:
                     if(size >=2) {
+                        mapView.removeAllPOIItems();
                         Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
                         in1 = MainActivity.ThemaItem.get(1);
                         marker = new MapPOIItem();
@@ -386,6 +411,7 @@ public class MainActivity extends FragmentActivity {
                     break;
                 case 2:
                     if(size >=3) {
+                        mapView.removeAllPOIItems();
                         Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
                         in1 = MainActivity.ThemaItem.get(2);
                         marker = new MapPOIItem();
@@ -405,6 +431,7 @@ public class MainActivity extends FragmentActivity {
                     break;
                 case 3:
                     if(size >=4) {
+                        mapView.removeAllPOIItems();
                         Toast.makeText(getApplicationContext(), "" + size, Toast.LENGTH_SHORT).show();
                         in1 = MainActivity.ThemaItem.get(3);
                         marker = new MapPOIItem();
