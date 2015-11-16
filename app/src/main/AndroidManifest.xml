@@ -62,11 +62,13 @@
                 <action android:name="ACTION.SET.NEWS"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".MainActivity$BroadcastReceiverMain">
-            <intent-filter>
-                <action android:name="ACTION.GET.NEWS"/>
-            </intent-filter>
-        </receiver>
+
+        <activity
+            android:name=".AnniActivity">
+        </activity>
+        <activity
+            android:name=".AnniEditActivity">
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

@@ -48,6 +48,23 @@ public class registerAlarm {
             e.printStackTrace();
         }
     }
+    public void registerNews(int sec) {
+        SharedInit SI = new SharedInit(context);
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.SECOND, cal.get(Calendar.SECOND) + sec);
+            Intent intentMyService;
+            intentMyService = new Intent("ACTION.SET.NEWS");
+            AlarmManager am = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
+            PendingIntent sender = PendingIntent.getBroadcast(context, 0, intentMyService, 0);
+            // 서비스 시작
+            am.set(AlarmManager.RTC, cal.getTimeInMillis(), sender);
+        } catch (Exception e) {
+            Log.d("MpMainActivity", e.getMessage() + "");
+
+            e.printStackTrace();
+        }
+    }
     public void registerAM(String idIndex,String index) {
         SharedInit SI = new SharedInit(context);
         try {

@@ -10,7 +10,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class DBHandler {
     private NoonDatabase helper;
@@ -36,7 +35,45 @@ public class DBHandler {
         helper.close();
     }
 
+    public boolean insertAnni(Anni ani){
+        ArrayList<Anni> Annis = new ArrayList<>();
+        Cursor cursor= null;
+        try{
+            db.execSQL("INSERT INTO anni_profile (subject, year, month, day, cate) " +
+                    "VALUES ('" + ani.getSubject() + "', " + ani.getYear() + ", " + ani.getMonth() + ", " + ani.getDay() + ",'"+ ani.getCate() +"');");
 
+        }catch (Exception e){
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public ArrayList<Anni> selectAnni(){
+        ArrayList<Anni> Annis = new ArrayList<>();
+        Cursor cursor= null;
+        cursor = db.rawQuery("select * from anni_profile;", null);
+        if(cursor.getCount() <= 0)
+            return null;
+        int col1 = cursor.getColumnIndex("seq");
+        int col2 = cursor.getColumnIndex("subject");
+        int col3 = cursor.getColumnIndex("year");
+        int col4 = cursor.getColumnIndex("month");
+        int col5 = cursor.getColumnIndex("cate");
+        cursor.moveToFirst();
+        while(cursor.moveToNext()){
+            Anni item = new Anni();
+            item.setSeq(cursor.getInt(col1));
+            item.setSubject(cursor.getString(col2));
+            item.setYear(cursor.getInt(col3));
+            item.setMonth(cursor.getInt(col4));
+            item.setCate(cursor.getString(col5));
+            Annis.add(item);
+        }
+        return Annis;
+
+    }
     public String selectfood(String local) throws SQLException {
         Cursor cursor= null;
         ArrayList<Integer> weight = new ArrayList<>();

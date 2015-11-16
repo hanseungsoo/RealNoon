@@ -25,10 +25,15 @@ public class NoonDatabase extends SQLiteOpenHelper {
         String CREATE_SQL3 = "CREATE TABLE IF NOT EXISTS food_favorite " +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "local_name TEXT, food TEXT, wea TEXT, time TEXT, weight INTEGER, f_date TEXT);";
+        String CREATE_SQL4 = "CREATE TABLE IF NOT EXISTS anni_profile" +
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                "subject TEXT, year INTEGER, month INTEGER,day INTEGER, cate TEXT);";
+
         try {
             db.execSQL(CREATE_SQL1);
             db.execSQL(CREATE_SQL2);
             db.execSQL(CREATE_SQL3);
+            db.execSQL(CREATE_SQL4);
             Log.i("widgeta","create sql");
         } catch(Exception ex) {
             Log.i("widgeta", "Exception in CREATE_SQL");

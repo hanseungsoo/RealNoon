@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
  */
 public class optionActivity extends FragmentActivity {
     CheckBox a, b, c, d, e, f, g;
-    Button btn;
+    Button btn,btn2;
     SharedInit SI;
     registerAlarm RA;
 
@@ -32,6 +32,7 @@ public class optionActivity extends FragmentActivity {
         f = (CheckBox) findViewById(R.id.checkBox5);
         g = (CheckBox) findViewById(R.id.checkBox6);
         btn = (Button) findViewById(R.id.stopservice);
+        btn2 = (Button)findViewById(R.id.addAnni);
 
         SI = new SharedInit(getApplicationContext());
         RA = new registerAlarm(getApplicationContext());
@@ -161,7 +162,13 @@ public class optionActivity extends FragmentActivity {
             }
         });
 
-
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(optionActivity.this,AnniActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

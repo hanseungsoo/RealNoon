@@ -1,17 +1,12 @@
 package com.example.han.realnoon;
 
 import android.app.ActionBar;
-import android.app.AlarmManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,7 +35,6 @@ import net.daum.mf.map.api.MapView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class MainActivity extends FragmentActivity {
@@ -72,7 +66,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_news);
         if(ThemaItem.isEmpty()) {
             make_dummy(); }
         Intent a = new Intent(this, GpsService.class);
@@ -89,24 +83,10 @@ public class MainActivity extends FragmentActivity {
             rA.registerplace();
             rA.registerOneWeek();*/
             rA.registerDong("Detailaddr");
-
+            rA.registerNews(10);
         }
         rA.testAM("ACTION.GET.ONE",14,18);
 
-        try {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.SECOND, cal.get(Calendar.SECOND) + 10);
-            Intent intentMyService;
-            intentMyService = new Intent("ACTION.SET.NEWS");
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            PendingIntent sender = PendingIntent.getBroadcast(getApplicationContext(), 0, intentMyService, 0);
-            // 서비스 시작
-            am.set(AlarmManager.RTC, cal.getTimeInMillis(), sender);
-        } catch (Exception e) {
-            Log.d("MpMainActivity", e.getMessage() + "");
-
-            e.printStackTrace();
-        }
 
 
 
@@ -114,18 +94,6 @@ public class MainActivity extends FragmentActivity {
 
         //바인딩
         actionbar = getActionBar();
-        nameTv = (TextView)findViewById(R.id.nameView);
-        telTv = (TextView)findViewById(R.id.telView);
-        cateTv = (TextView)findViewById(R.id.cateView);
-        addrTv = (TextView)findViewById(R.id.addrView);
-        foodImg = (ImageView)findViewById(R.id.cookImage);
-
-
-        // MapView
-        mapView = new MapView(this);
-        mapView.setDaumMapApiKey("9db6272582177f1d7b0643e35e1993e9");
-        mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        mapViewContainer.addView(mapView);
 
 
         //Drawer
@@ -171,13 +139,9 @@ public class MainActivity extends FragmentActivity {
         }
 
         // tab
-        actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionbar.setHomeButtonEnabled(false);
 
-        for (String tab_name : tabs) {
-            actionbar.addTab(actionbar.newTab().setText(tab_name)
-                    .setTabListener(new TabListen()));
-        }
+
         if(noonWidget.CLICK_FLAG == true) {
             int position = noonWidget.themaValue;
             actionbar.setSelectedNavigationItem(position);
@@ -189,7 +153,6 @@ public class MainActivity extends FragmentActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case 0:
-                        mapViewContainer.removeView(mapView);
                         setContentView(R.layout.activity_news);
                         setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
                         TextView newstitle = (TextView)findViewById(R.id.newsTitle);
@@ -276,7 +239,6 @@ public class MainActivity extends FragmentActivity {
                             .setTabListener(new TabListen()));
                 }
             }else if(position ==3) {
-                mapViewContainer.removeView(mapView);
                 setContentView(R.layout.activity_news);
                 setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
             }
