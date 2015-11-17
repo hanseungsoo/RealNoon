@@ -65,15 +65,18 @@ public class AnniActivity extends FragmentActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent intent = new Intent(AnniActivity.this,AnniModify.class);
-        intent.putExtra("year",Annis.get(position).getYear());
-        intent.putExtra("month", Annis.get(position).getMonth());
-        intent.putExtra("day",Annis.get(position).getDay());
-        intent.putExtra("subject", Annis.get(position).getSubject());
-        intent.putExtra("cate", Annis.get(position).getCate());
-        intent.putExtra("seq",Annis.get(position).getSeq());
-        startActivity(intent);
-        finish();
+        if(Annis !=null){
+            Intent intent = new Intent(AnniActivity.this,AnniModify.class);
+            intent.putExtra("year",Annis.get(position).getYear());
+            intent.putExtra("month", Annis.get(position).getMonth());
+            intent.putExtra("day",Annis.get(position).getDay());
+            intent.putExtra("subject", Annis.get(position).getSubject());
+            intent.putExtra("cate", Annis.get(position).getCate());
+            intent.putExtra("seq",Annis.get(position).getSeq());
+            startActivity(intent);
+            finish();
+        }
+
 
     }
     private AlertDialog createDialog(final Anni anin) {

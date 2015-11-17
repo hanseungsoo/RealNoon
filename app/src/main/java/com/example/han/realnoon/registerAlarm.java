@@ -53,12 +53,13 @@ public class registerAlarm {
         try {
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.SECOND, cal.get(Calendar.SECOND) + sec);
+            long oneHour = 60 * 60 * 1000;
             Intent intentMyService;
             intentMyService = new Intent("ACTION.SET.NEWS");
             AlarmManager am = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
             PendingIntent sender = PendingIntent.getBroadcast(context, 0, intentMyService, 0);
             // 서비스 시작
-            am.set(AlarmManager.RTC, cal.getTimeInMillis(), sender);
+            am.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(),oneHour, sender);
         } catch (Exception e) {
             Log.d("MpMainActivity", e.getMessage() + "");
 

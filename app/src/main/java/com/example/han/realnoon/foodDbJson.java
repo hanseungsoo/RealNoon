@@ -55,10 +55,14 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                             item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                             item.address = "(X)address";
                             item.phone = "추천할만한";
-                            MainActivity.ThemaItem.set( 0 , item);
+                            MainActivity.ThemaItem.set(0, item);
                             MainActivity.mHandler.sendEmptyMessage(1);
+                            registerAlarm rA = new registerAlarm(MainActivity.mContext);
+                            rA.AlarmCancel("ACTION.SET.NEWS");
+                            rA.registerNews(60*60*1000);
                         }else{
                             MainActivity.ThemaItem.set(0,itemList.get(0));
+                            MainActivity.mHandler.sendEmptyMessage(1);
                         }
                     }
 
@@ -66,6 +70,8 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                     public void onFail() {
                     }
                 });
+            }else {
+                MainActivity.mHandler.sendEmptyMessage(1);
             }
 
             Searcher searcher2 = new Searcher();
@@ -100,7 +106,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                         item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                         item.address = "(X)address";
                         item.phone = "추천할만한";
-                        MainActivity.ThemaItem.set( 2 , item);
+                        MainActivity.ThemaItem.set(2, item);
                     }else{
                         MainActivity.ThemaItem.set(2, itemList.get(0));
                     }
@@ -138,7 +144,6 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             String exceptionAsStrting = sw.toString();
             Log.e("aaaa", exceptionAsStrting);
         }
-
 
         super.onPostExecute(aVoid);
     }
@@ -209,6 +214,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
         DBHandler dh = DBHandler.open(MainActivity.mContext);
         ArrayList<Anni> Annis = dh.selectAnniWithWhere(month, day);
         String food_nameAnniv = "";
+
         if(Annis == null){
             try {
                 Log.i("aaaa", "-----출출2" + params[1]);
@@ -257,7 +263,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                 String exceptionAsStrting = sw.toString();
                 Log.e("aaaa", exceptionAsStrting);
             }
-            if(food_nameAnniv.equals("No")){
+            if(food_nameAnniv.equals("empty")){
                 try {
                     Log.i("aaaa", "-----출출3" + params[2]);
                     URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[2]);
@@ -307,14 +313,14 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                     String exceptionAsStrting = sw.toString();
                     Log.e("aaaa", exceptionAsStrting);
                 }
-                if(food_nameAnniv.equals("No")){
+                if(food_nameAnniv.equals("empty")){
                     Item item = new Item();
                     item.title = "오늘은";
                     item.category = "없습니다";
                     item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                     item.address = "(X)address";
                     item.phone = "기념일이";
-                    MainActivity.ThemaItem.add( 0, item);
+                    MainActivity.ThemaItem.set( 0, item);
                     staticMerge.finish_food[1]="empty";
                 }else{
                     staticMerge.finish_food[1]=food_nameAnniv;

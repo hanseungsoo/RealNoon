@@ -85,7 +85,7 @@ public class MainActivity extends FragmentActivity {
             rA.registerDong("Detailaddr");
             rA.registerNews(10);
         }
-        rA.testAM("ACTION.GET.ONE",14,18);
+        rA.testAM("ACTION.GET.ONE",16,12);
 
 
 
