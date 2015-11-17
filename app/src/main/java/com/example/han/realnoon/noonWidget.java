@@ -79,33 +79,26 @@ public class noonWidget extends AppWidgetProvider {
             onUpdate(context, appWidgetManager, ids);
         }
         if (intent.getAction().equals("chae.widget.left")) {
-            //SharedPreferences prefs = context.getSharedPreferences("NW", 0);
-            //SharedPreferences.Editor editor = prefs.edit();
             int value = intent.getIntExtra("T_value", 0);
             switch (value) {
                 case 0:
-                    //editor.putString("thema", "thema4");
                     t_Value = "thema4";
                     themaValue = 3;
                     break;
                 case 1:
-                    //editor.putString("thema", "thema1");
                     t_Value = "thema1";
                     themaValue = 0;
                     break;
                 case 2:
-                    //editor.putString("thema", "thema2");
                     t_Value="thema2";
                     themaValue = 1;
                     break;
                 case 3:
-                    //editor.putString("thema", "thema3");
                     t_Value = "thema3";
                     themaValue = 2;
                     break;
                 default:
             }
-            //editor.commit();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thiswidget = new ComponentName(context, noonWidget.class);
             int[] ids = appWidgetManager.getAppWidgetIds(thiswidget);
@@ -113,33 +106,26 @@ public class noonWidget extends AppWidgetProvider {
         }
 
         if (intent.getAction().equals("chae.widget.right")) {
-            //SharedPreferences prefs = context.getSharedPreferences("NW", 0);
-            //SharedPreferences.Editor editor = prefs.edit();
             int value = intent.getIntExtra("T_value", 0);
             switch (value) {
                 case 0:
-                    //editor.putString("thema", "thema2");
                     t_Value = "thema2";
                     themaValue = 1;
                     break;
                 case 1:
-                    //editor.putString("thema", "thema3");
                     t_Value = "thema3";
                     themaValue = 2;
                     break;
                 case 2:
-                    //editor.putString("thema", "thema4");
                     t_Value = "thema4";
                     themaValue = 3;
                     break;
                 case 3:
-                    // editor.putString("thema", "thema1");
                     t_Value = "thema1";
                     themaValue = 0;
                     break;
                 default:
             }
-            //editor.commit();
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             ComponentName thiswidget = new ComponentName(context, noonWidget.class);
             int[] ids = appWidgetManager.getAppWidgetIds(thiswidget);
@@ -157,8 +143,7 @@ public class noonWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, final AppWidgetManager appWidgetManager,final int appWidgetId) {
 
-        //SharedPreferences prefs = context.getSharedPreferences("NW", 0);
-        //String content = prefs.getString("content", "content1");
+
         String content = contentValue;
         int layoutId;
         if ("content1".equals(content)) {
@@ -206,14 +191,34 @@ public class noonWidget extends AppWidgetProvider {
         } else if ("content2".equals(content)) {
             Log.i("widget","content2");
             layoutId = R.layout.widget_layout2;
+
             updateViews = new RemoteViews(context.getPackageName(), layoutId);
-            appWidgetManager.updateAppWidget(appWidgetId, updateViews);
+
+            updateViews.setTextViewText(R.id.widget_tv, content);
+            //updateViews.setTextViewText(R.id.widget_title, (CharSequence) GetNewsData.datevec);
+            updateViews.setTextViewText(R.id.widget_title, GetNewsData.titlevec.get(0).toString());
+            updateViews.setTextViewText(R.id.widget_sub, GetNewsData.descvec.get(0).toString());
+
+
+            Intent click_intent = new Intent();
+            click_intent.setAction("chae.widget.click");
+            PendingIntent pendingIntent_C = PendingIntent.getBroadcast(context, 0, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            updateViews.setOnClickPendingIntent(R.id.widget_click, pendingIntent_C);
+
+            ImageSize minImazeSize = new ImageSize(120,400);
+            ImageLoader.getInstance().loadImage(GetNewsData.imagevec.get(0).toString(), minImazeSize, displayOptions, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    updateViews.setImageViewBitmap(R.id.widget_image, loadedImage);
+                    appWidgetManager.updateAppWidget(appWidgetId, updateViews);
+                }
+            });
         } else if ("content3".equals(content)) {
-            layoutId = R.layout.widget_layout2;
+            //layoutId = R.layout.widget_layout2;
         } else if ("content4".equals(content)){
-            layoutId = R.layout.widget_layout2;
+            //layoutId = R.layout.widget_layout2;
         } else {
-            layoutId = R.layout.widget_layout2;
+            layoutId = R.layout.widget_layout;
         }
 
 

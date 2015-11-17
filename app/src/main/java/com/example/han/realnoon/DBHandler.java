@@ -33,6 +33,7 @@ public class DBHandler {
 
     public void close() {
         helper.close();
+        db.close();
     }
 
     public boolean insertAnni(Anni ani){
@@ -177,8 +178,7 @@ public class DBHandler {
             Log.i("db", "db insert Failed.");
         }
     }
-
-    public void widget_insert() {
+    public void food_favorite_insert() {
         String local = item.address;
         String lc[] = local.split(" ");
         Calendar c = Calendar.getInstance();
@@ -188,7 +188,7 @@ public class DBHandler {
 
         try {
             db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight, f_date) " +
-                    "VALUES ('" + lc[2] + "', '" + item.title + "', '" + staticMerge.temp + "', '" + staticMerge.what + "', 1, '"+ today +"');");
+                    "VALUES ('" + lc[2] + "', '" + item.title + "', '" + staticMerge.temp + "', '" + staticMerge.what + "', 1, '" + today + "');");
             String update_sql = "UPDATE food_favorite AS t " +
                     "JOIN ( " +
                     "select local_name, food, wea, time, sum(weight) as sum_weight from food_favorite " +
@@ -211,92 +211,138 @@ public class DBHandler {
 
     public void food_pattern_insert() {
         try {
+            Log.i("db", "food_pattern_insert called");
             db.execSQL("INSERT INTO food_pattern VALUES (null, " + pattern[0] + ", " + pattern[1] + ", " + pattern[2] + ", " + pattern[3] + ", " + pattern[4] + ", " + pattern[5] + ", " + pattern[6] + ");");
         }catch (Exception e) {
             Log.i("db","food_pattern_insert Failed");
         }
     }
 
-    public void food_pattern_clean() {
+    public void food_pattern_clean1() {
         // 패턴 일주일에 한번씩 정리해주는 메서드
 
         Cursor cursor= null;
-        String clean_sql1 = "UPDATE food_pattern as t " +
-                "JOIN ( SELECT SUM(a) AS sa, SUM(b) AS sb, SUM(c) AS sc, SUM(d) AS sd, SUM(e) AS se, SUM(f) AS sf, SUM(g) AS sf " +
-                "FROM food_pattern) as j " +
-                "SET t.a=j.sa, t.b=j.sb, t.c=j.sc, t.d=j.sd, t.e=j.se, t.f=j.sf, t.g=j.sg;";
-        String clean_sql2 = "DELETE FROM food_pattern WHERE _id not like 1;";
-        String clean_sql3 = "SELECT a,b,c,d,e,f,g FROM food_pattern;";
+        String clean_sql1 = "SELECT SUM(a),SUM(b),SUM(c),SUM(d),SUM(e),SUM(f),SUM(g) FROM food_pattern;";
+        //String clean_sql1 = "REPLACE INTO food_pattern (a, b) SELECT SUM(a), SUM(b) FROM food_pattern";
+        String clean_sql2 = "DELETE FROM food_pattern;";
+        String clean_sql3 = "DELETE FROM SQLITE_SEQUENCE WHERE NAME = 'food_pattern';";
 
-        try {
-            db.execSQL(clean_sql1);
-            db.execSQL(clean_sql2);
-        }catch(Exception e) {
-            Log.i("db","food_pattern_clean Failed1");
-        }
-        cursor = db.rawQuery(clean_sql3, null);
-        if (cursor != null) {
+
+        cursor = db.rawQuery(clean_sql1, null);
+        if(cursor.getCount() >0) {
             cursor.moveToFirst();
+            int maxP = 0;
+            int P = 0;
+            for(int i=0; i<cursor.getColumnCount(); i++) {
+                P = cursor.getInt(i);
+                pattern[i] = P;
+                Log.i("db",""+pattern[i]);
+                maxP = (maxP<P?P:maxP);
+            }
+            maxP = maxP-3;
+            for(int i=0; i<cursor.getColumnCount();i++) {
+                pattern[i] = (maxP<=pattern[i]?1:0);
+
+            }
         }
 
-        int maxP = 0;
-        int P = 0;
-        for(int i=0; i<cursor.getColumnCount(); i++) {
-            P = cursor.getInt(i);
-            pattern[i] = P;
-            maxP = (maxP<P?P:maxP);
-        }
-        maxP = maxP-3;
-        for(int i=0; i<cursor.getColumnCount();i++) {
-            pattern[i] = (maxP<=pattern[i]?1:0);
-        }
-        String clean_sql4 = "UPDATE food_pattern " +
-                "SET a="+pattern[0]+", b="+pattern[1]+", c="+pattern[2]+", d="+pattern[3]+", e="+pattern[4]+", f="+pattern[5]+", g="+pattern[6]+";";
-
+        String clean_sql4 = "INSERT INTO food_pattern (a,b,c,d,e,f,g) VALUES " +
+                "("+pattern[0]+","+pattern[1]+","+pattern[2]+","+pattern[3]+","+pattern[4]+","+pattern[5]+","+pattern[6]+");";
         try {
-            db.execSQL(clean_sql4);
-        }catch(Exception e) {
-            Log.i("db","food_patttern_clean Failed2");
-        }
-
-    }
-
-    public void abode_insert() {
-        String local = item.address;
-        String lc[] = local.split(" ");
-
-        try {
-            db.execSQL("INSERT INTO abode VALUES (null, '" + lc[2] + "', '" + lc[3] + "', 1);");
-        }catch (Exception e) {
-            Log.i("db","food_pattern_insert Failed");
-        }
-    }
-    public void abode_clean() {
-        //거주지 하루에 한 번 클린해주는 메서드
-        String clean_sql1 = "UPDATE abode AS t " +
-                "JOIN ( " +
-                "SELECT local_name, addr, SUM(weight) AS sum_weight FROM abode " +
-                "GROUP BY local_name, addr HAVING count(*)>1) AS j " +
-                "ON t.local_name = j.local_name " +
-                "SET t.weight = j.sum_weight;";
-        String clean_sql2 = "UPDATE abode AS t " +
-                "JOIN ( " +
-                "SELECT loacl_name, MAX(weight) AS max_weight FROM abode " +
-                "GROUP BY weight HAVING count(*)>1) AS j " +
-                "ON t.local_name = j.local_name " +
-                "SET t.count = t.count+1;";
-        // t.count == 0 인 거 삭제하고, 모든 weight 부분 0으로 update하면 끝.
-        String clean_sql3 = "DELETE FROM adobe " +
-                "WHERE count=0;";
-        String clean_sql4 = "UPDATE abode " +
-                "SET weight=0;";
-
-        try{
-            db.execSQL(clean_sql1);
             db.execSQL(clean_sql2);
             db.execSQL(clean_sql3);
             db.execSQL(clean_sql4);
         }catch(Exception e) {
+            Log.i("db","food_pattern_clean Failed1");
+        }
+    }
+    public void food_pattern_clean2() {
+        // 패턴 일주일에 한번씩 정리해주는 메서드
+
+        Cursor cursor= null;
+        String clean_sql1 = "SELECT SUM(a),SUM(b),SUM(c),SUM(d),SUM(e),SUM(f),SUM(g) FROM food_pattern;";
+
+
+        cursor = db.rawQuery(clean_sql1, null);
+        if(cursor.getCount() >0) {
+            cursor.moveToFirst();
+            int maxP = 0;
+            int minP = 0;
+            int P = 0;
+            for(int i=0; i<cursor.getColumnCount(); i++) {
+                P = cursor.getInt(i);
+                pattern[i] = P;
+                Log.i("db",""+pattern[i]);
+                maxP = (maxP<P?P:maxP);
+                minP = (P>minP?minP:P);
+            }
+            int avgP = (maxP+minP)/2;
+
+            SharedInit si = new SharedInit(MainActivity.mContext);
+
+            for(int i=0; i<cursor.getColumnCount();i++) {
+                pattern[i] = (avgP<=pattern[i]?1:0);
+                si.setSharedTrue(String.valueOf(i),(pattern[i]>0?true:false));
+            }
+        }
+    }
+    public void abode_insert() {
+        String local = item.address;
+        String lc[] = local.split(" ");
+        if(!item.phone.equals("010-2043-5392")) {
+            try {
+                db.execSQL("INSERT INTO abode VALUES (null, '" + lc[2] + "', '" + lc[3] + "', 1);");
+            }catch (Exception e) {
+                Log.i("db","abode_insert Failed");
+            }
+        }
+    }
+    public void abode_clean() {
+        //거주지 하루에 한 번 클린해주는 메서드
+        Cursor cursor= null;
+        int maxP=0;
+        int weight = 0;
+        int id = 0;
+        String loc1 = "";
+        String loc2 = "";
+        int count = 0;
+        String clean_sql1 = "SELECT _id, COUNT(_id), local_name, addr, count FROM abode GROUP BY local_name, addr HAVING COUNT(*)>1;";
+        String clean_sql2 = "";
+        String clean_sql3 = "";
+        String clean_sql4 = "";
+        String clean_sql5 = "";
+
+        cursor = db.rawQuery(clean_sql1, null);
+        if(cursor.getCount() >0) {
+            cursor.moveToFirst();
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                id = cursor.getInt(0);
+                weight = cursor.getInt(1);
+                loc1 = cursor.getString(2);
+                loc2 = cursor.getString(3);
+                count = cursor.getInt(4);
+                maxP = (maxP > weight ? maxP : weight);
+
+                clean_sql2 = "UPDATE abode SET weight=" + weight + " WHERE local_name='" + loc1 + "' AND addr='" + loc2 + "';";
+            }
+        }
+        clean_sql3 = "DELETE FROM abode " +
+                "WHERE count NOT IN " +
+                "(SELECT MAX(count) FROM abode GROUP BY addr, weight);";
+        clean_sql4 = "DELETE FROM abode " +
+                "WHERE EXISTS (SELECT _id FROM abode WHERE count=0 " +
+                "AND EXISTS (SELECT _id FROM abode WHERE count>0));";
+        clean_sql5 = "UPDATE abode SET count = (count+1), weight=0;";
+        String clean_sql6 = "DELETE FROM abode WHERE _id NOT IN " +
+                "(SELECT * FROM (SELECT MIN(_id) FROM abode GROUP BY local_name, addr) AS T);";
+        try {
+            db.execSQL(clean_sql2);
+            db.execSQL(clean_sql3);
+            db.execSQL(clean_sql4);
+            db.execSQL(clean_sql5);
+            db.execSQL(clean_sql6);
+        }catch (Exception e) {
             Log.i("db","abode_clean Failed");
         }
     }
@@ -355,6 +401,58 @@ public class DBHandler {
         }
         Log.i("widget","new hour : " + hour +",minute:"+min);
         //si.setSharedTime(timeValue, hour, min);
+    }
+
+    public void dummy_insert() {
+        try {
+            db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','파전','rain','아침',1);");
+            db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','피자','broken clouds','아침',1);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 1,1,1,1,1,1,1);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 1,0,0,1,0,0,0);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 0,1,1,1,0,0,0);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 1,0,0,1,0,0,1);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 0,0,1,1,1,1,1);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 1,0,0,1,0,0,0);");
+            db.execSQL("INSERT INTO food_pattern VALUES (null, 1,0,0,1,0,0,0);");
+            db.execSQL("INSERT INTO abode VALUES (null, '단월동','458-101', 1, 0);");
+            db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight, f_date) " +
+                    "VALUES ('단월동','파전','rain', null, 1, '2015-11-10');");
+        }catch (Exception e) {
+            Log.i("db","dummy_insert Failed");
+        }
+    }
+
+    public Cursor select_food_pattern() {
+        Cursor cursor = null;
+        // cursor = db.rawQuery("select * from food_favorite where local_name = ? AND local_name = ?", new String[] {"David","2"});
+        cursor = db.rawQuery("SELECT a,b,c,d,e,f,g FROM food_pattern",null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        if(cursor.getCount() >0) {
+            cursor.moveToFirst();
+            return cursor;
+        }
+
+        return null;
+    }
+
+    public Cursor select_abode() {
+        Cursor cursor =null;
+        cursor = db.rawQuery("SELECT * from abode",null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+        if(cursor.getCount() >0) {
+            cursor.moveToFirst();
+            return cursor;
+        }
+
+        return null;
     }
 
 }

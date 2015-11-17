@@ -2,53 +2,53 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\classes-d90104a907950758a75b119268018d9b64e55dee.jar" />
-    </item>
-    <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\libs\universal-image-loader-1.9.4.jar"
+        jar="D:\noon\workspace\1117\RealNoon\app\libs\universal-image-loader-1.9.4.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="dd9eeb557650c4ad7394df23f0f5cf27a7cfc697">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.4-58c15d048962daa91afe3e0face31d5888e79c3d.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\universal-image-loader-1.9.4-e18c2dfe3cb27ae71b6ffee59a166eaa62bb1e41.jar" />
     </item>
     <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\libs\icu4j-4.8.1.1.jar"
+        jar="D:\noon\workspace\1117\RealNoon\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\classes-43c850b43f87d1714e34ae522d78057dfa3aca2a.jar" />
+    </item>
+    <item
+        jar="D:\noon\workspace\1117\RealNoon\app\libs\icu4j-4.8.1.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="654b7021e7bb6c5b7b35c88d23cac1022c7b3d6b">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\icu4j-4.8.1.1-a7e4211f3ed6f624e36077cd6c466933fea22fb7.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\icu4j-4.8.1.1-3281b0327ee51f77adf8b9d29a6cf4875d3ae0c7.jar" />
     </item>
     <item
-        jar="C:\Users\kku\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jar="D:\Program\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-61a7b78f435245ca0b9e713baa87bd0676f48e30.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1-7fb097cad9136f32bacc025f0beaf6fd1744ed4a.jar" />
     </item>
     <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\libs\libDaumMapAndroid.jar"
+        jar="D:\noon\workspace\1117\RealNoon\app\libs\libDaumMapAndroid.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="91c9de067eff6b3e026d21934e91ec45db8cd277">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\libDaumMapAndroid-b089b8f86573f2e4851be813d05b974b5b906f4a.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\libDaumMapAndroid-314106fa8845aafa373d581e11b33880a0b05768.jar" />
     </item>
     <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
+        jar="D:\noon\workspace\1117\RealNoon\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.1\jars\libs\internal_impl-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-ca25d23e0fe41583b36180e227cf6bddf07d4de2.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1-4547e335ca0703b143a27394fb2ee855d2ec6aab.jar" />
     </item>
     <item
-        jar="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
+        jar="D:\noon\workspace\1117\RealNoon\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.1\jars\classes.jar"
         jumboMode="false"
         revision="23.0.1"
         sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="C:\Users\kku\Desktop\noonch\project\RealNoon\app\build\intermediates\pre-dexed\debug\classes-ef48138922950db89a60d0846f9add53ba66ba7f.jar" />
+        <dex dex="D:\noon\workspace\1117\RealNoon\app\build\intermediates\pre-dexed\debug\classes-b7a31120bf942e12de1a7b53053c7ada5e6f6e4b.jar" />
     </item>
 
 </items>

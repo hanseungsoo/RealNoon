@@ -27,9 +27,6 @@ public class settingBroadcast extends BroadcastReceiver {
         }
         if(intent.getAction().equals("ACTION.SET.ONEWEEK")){
             // 1주
-            DBHandler dbHandler = DBHandler.open(MainActivity.mContext);
-            dbHandler.food_pattern_clean();
-            dbHandler.close();
         }
         if(intent.getAction().equals("ACTION.SET.NEWS")){
             GetNewsData GND = new GetNewsData();

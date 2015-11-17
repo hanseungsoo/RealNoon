@@ -41,10 +41,11 @@ public class NoonDatabase extends SQLiteOpenHelper {
 
         try {
             db.execSQL("INSERT INTO food_pattern VALUES (null, 1,1,1,1,1,1,1);");
+            db.execSQL("INSERT INTO abode VALUES (null, '단월동','458-101', 1, 0);");
             db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','파전','rain','아침',1);");
             db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','피자','broken clouds','아침',1);");
 
-            Log.i("widget","insert sql");
+            Log.i("widgeta","insert sql");
         } catch(Exception ex) {
             Log.i("widgeta", "Exception in INSERT_SQL");
         }
@@ -59,9 +60,10 @@ public class NoonDatabase extends SQLiteOpenHelper {
         Log.i("widget", "Upgrading database from version " + oldVersion + " to " + newVersion + ".");
 
         if(newVersion >1) {
-            db.execSQL("DROP TABLE IF EXISTS food_pattern");
-            db.execSQL("DROP TABLE IF EXISTS abode");
-            db.execSQL("DROP TABLE IF EXISTS food_favorite");
+            db.execSQL("DROP TABLE IF EXISTS food_pattern;");
+            db.execSQL("DROP TABLE IF EXISTS abode;");
+            db.execSQL("DROP TABLE IF EXISTS food_favorite;");
+            db.execSQL("DROP TABLE IF EXISTS anni_profile;");
             onCreate(db);
         }
     }//onUpgrade 끝끝

@@ -282,10 +282,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     public static void mmmm() {
-        Context context = mContext.getApplicationContext();
+        //Context context = mContext.getApplicationContext();
         Intent update = new Intent();
         update.setAction("chae.widget.update");
-        context.sendBroadcast(update);
+        mContext.sendBroadcast(update);
     }
 
     public void setDrawer(int a){
