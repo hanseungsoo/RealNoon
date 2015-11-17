@@ -27,7 +27,7 @@ public class noonWidget extends AppWidgetProvider {
     public static int themaValue=0;
     public static String t_Value="thema1";
     private static DisplayImageOptions displayOptions;
-    public static String contentValue="content2";
+    public static String contentValue="content5";
     public static String ph="000-0000";
     public static boolean CLICK_FLAG = false;
 
@@ -43,7 +43,6 @@ public class noonWidget extends AppWidgetProvider {
         super.onEnabled(context);
         themaValue = 0;
         t_Value = "thema1";
-        contentValue = "content2";
     }
 
     @Override
@@ -136,19 +135,19 @@ public class noonWidget extends AppWidgetProvider {
         if (intent.getAction().equals("chae.widget.click1")) {
             CLICK_FLAG = true;
             noonDb();
-            Log.i("widget","click2 Clicked");
+            Log.i("widget","음식집 Clicked");
             Intent i = new Intent();
             i.setClassName("com.example.han.realnoon", "com.example.han.realnoon.MainActivity");
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             context.startActivity(i);
         }
 
         if(intent.getAction().equals("chae.widget.click2")) {
             CLICK_FLAG = true;
-            Log.i("widget", "click2 Clicked");
+            Log.i("widget", "뉴스 Clicked");
             Intent i = new Intent();
             i.setClassName("com.example.han.realnoon", "com.example.han.realnoon.MainActivity");
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             context.startActivity(i);
         }
 
@@ -235,10 +234,9 @@ public class noonWidget extends AppWidgetProvider {
             });
         } else if ("content3".equals(content)) {
             //layoutId = R.layout.widget_layout2;
-        } else if ("content4".equals(content)){
-            //layoutId = R.layout.widget_layout2;
         } else {
-            layoutId = R.layout.widget_layout;
+            layoutId = R.layout.widget_layout_default;
+            appWidgetManager.updateAppWidget(appWidgetId, updateViews);
         }
 
 
@@ -275,7 +273,7 @@ public class noonWidget extends AppWidgetProvider {
     public void noonDb() {
         DBHandler dbHandler = DBHandler.open(MainActivity.mContext, item);
         dbHandler.click_time();
-        //dbHandler.food_favorite_insert();
+        dbHandler.food_favorite_insert();
         dbHandler.close();
     }
 

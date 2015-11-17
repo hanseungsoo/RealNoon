@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">눈치코칭2</string>
+    <string name="app_name">눈치코칭</string>
     <string-array name="planets_array">
         <item>음식점</item>
         <item>날씨</item>

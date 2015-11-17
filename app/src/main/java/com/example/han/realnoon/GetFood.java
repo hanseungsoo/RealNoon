@@ -9,7 +9,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -94,6 +93,7 @@ public class GetFood extends BroadcastReceiver {
         if(intent.getAction().substring(0, 10).equals("ACTION.GET"))
         {
             MainActivity.mmmm();
+            noonWidget.contentValue="content1";
             Log.i("widget","receive:action.get ---> widget update");
         }
 

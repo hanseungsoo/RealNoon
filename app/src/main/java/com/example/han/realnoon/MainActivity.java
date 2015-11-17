@@ -141,16 +141,17 @@ public class MainActivity extends FragmentActivity {
         // tab
         actionbar.setHomeButtonEnabled(false);
 
-
         if(noonWidget.CLICK_FLAG == true) {
             if(noonWidget.contentValue.equals("content1")) {
-                int position = noonWidget.themaValue;
-                actionbar.setSelectedNavigationItem(position);
+                Log.i("widget","widget->main, content1");
+                int list_position = 0;
+                int tab_position = noonWidget.themaValue;
+                mDrawerList.performItemClick(mDrawerList.getChildAt(0), 0, mDrawerList.getItemIdAtPosition(0));
+                actionbar.setSelectedNavigationItem(tab_position);
                 noonWidget.CLICK_FLAG = false;
             }
 
         }
-
         mHandler = new Handler(Looper.getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
@@ -277,7 +278,7 @@ public class MainActivity extends FragmentActivity {
             Item item = new Item();
             item.title = "(X)title"+i;
             item.category = "(X)category"+i;
-            item.address = "(X)address"+i;
+            item.address = "(X) add ress"+i;
             item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
             item.phone = "010-2043-5392";
             ThemaItem.add(i-1,item);

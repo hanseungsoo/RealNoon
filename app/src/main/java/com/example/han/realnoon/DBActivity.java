@@ -45,9 +45,9 @@ public class DBActivity extends Activity {
         tv.setText(str);
     }
     public void Button21CLick(View v) {
-        //음식패턴 정리
+        //food_pattern_insert
         dbHandler.food_pattern_clean1();
-        //dbHandler.food_pattern_clean2();
+
     }
     public void Button22CLick(View v) {
         //음식패턴 정리

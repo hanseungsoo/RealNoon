@@ -67,6 +67,7 @@
                 android:background="@android:color/transparent"
                 android:id="@+id/call_button"
                 android:scaleType="fitXY"
+                android:layout_marginRight="12dp"
                 android:layout_alignParentLeft="true"/>
             <ImageButton
                 android:layout_width="25dp"
@@ -75,6 +76,7 @@
                 android:src="@drawable/swap"
                 android:id="@+id/widget_swap"
                 android:scaleType="fitXY"
+                android:layout_marginRight="12dp"
                 android:background="@android:color/transparent"
                 android:layout_toRightOf="@+id/call_button"/>
             <ImageButton

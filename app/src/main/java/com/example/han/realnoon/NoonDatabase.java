@@ -21,7 +21,7 @@ public class NoonDatabase extends SQLiteOpenHelper {
                 "a INTENGER, b INTEGER, c INTEGER, d INTEGER, e INTEGER, f INTEGER, g INTEGER);";;
         String CREATE_SQL2 = "CREATE TABLE IF NOT EXISTS abode " +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                "local_name TEXT, addr TEXT, count INTEGER);";
+                "local_name TEXT, addr TEXT, weight INTEGER, count INTEGER);";
         String CREATE_SQL3 = "CREATE TABLE IF NOT EXISTS food_favorite " +
                 "(_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "local_name TEXT, food TEXT, wea TEXT, time TEXT, weight INTEGER, f_date TEXT);";
@@ -43,7 +43,7 @@ public class NoonDatabase extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO food_pattern VALUES (null, 1,1,1,1,1,1,1);");
             db.execSQL("INSERT INTO abode VALUES (null, '단월동','458-101', 1, 0);");
             db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','파전','rain','아침',1);");
-            db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight) VALUES ('단월동','피자','broken clouds','아침',1);");
+            db.execSQL("INSERT INTO food_favorite VALUES (null, '단월동','피자','broken clouds','아침',1,'2015-11-17');");
 
             Log.i("widgeta","insert sql");
         } catch(Exception ex) {

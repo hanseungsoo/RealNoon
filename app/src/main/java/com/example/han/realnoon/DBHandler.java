@@ -187,22 +187,7 @@ public class DBHandler {
         today += "-" + String.valueOf(c.get(Calendar.DATE));
 
         try {
-            db.execSQL("INSERT INTO food_favorite (local_name, food, wea, time, weight, f_date) " +
-                    "VALUES ('" + lc[2] + "', '" + item.title + "', '" + staticMerge.temp + "', '" + staticMerge.what + "', 1, '" + today + "');");
-            String update_sql = "UPDATE food_favorite AS t " +
-                    "JOIN ( " +
-                    "select local_name, food, wea, time, sum(weight) as sum_weight from food_favorite " +
-                    "group by local_name, food, wea, time having count(*)>1) as j " +
-                    "on t.food = j.food " +
-                    "set t.weight = j.sum_weight;";
-            //date 갱신까지.
-            String delete_sql="delete p from food_favorite p " +
-                    "join ( " +
-                    "select max(_id) as max_id, local_name, food, wea, time " +
-                    "from food_favorite pp group by local_name, food, wea, time " +
-                    "having count(*)>1) as q " +
-                    "on q.food = p.food " +
-                    "where p._id < q.max_id;";
+            db.execSQL("INSERT INTO food_favorite VALUES (null, '" + lc[2] + "','" + item.title + "','" + staticMerge.temp + "','" + staticMerge.what + "',1,'" + today + "');");
             Log.i("db", "db insert succeessed");
         }catch(Exception e) {
             Log.i("db", "widget_insert Failed.");
