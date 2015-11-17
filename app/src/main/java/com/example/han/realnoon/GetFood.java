@@ -3,6 +3,7 @@ package com.example.han.realnoon;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import java.io.PrintWriter;
@@ -17,8 +18,8 @@ import java.util.Date;
 public class GetFood extends BroadcastReceiver {
 
     Context context;
-
-
+    Runnable mRunnable;
+    Handler mHandler;
 
     public void getItem(Intent intent,String index,String what){
 
@@ -92,10 +93,23 @@ public class GetFood extends BroadcastReceiver {
         }
         if(intent.getAction().substring(0, 10).equals("ACTION.GET"))
         {
-            MainActivity.mmmm();
             noonWidget.contentValue="content1";
+            MainActivity.mmmm();
             Log.i("widget","receive:action.get ---> widget update");
+
+            mRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    noonWidget.contentValue="content2";
+                    MainActivity.mmmm();
+                }
+            };
+
+            mHandler = new Handler();
+            mHandler.postDelayed(mRunnable, 3600000);
+
         }
+
 
     }
 }

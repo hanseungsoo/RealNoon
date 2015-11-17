@@ -59,7 +59,7 @@ public class registerAlarm {
             AlarmManager am = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
             PendingIntent sender = PendingIntent.getBroadcast(context, 0, intentMyService, 0);
             // 서비스 시작
-            am.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(),oneHour, sender);
+            am.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), oneHour, sender);
         } catch (Exception e) {
             Log.d("MpMainActivity", e.getMessage() + "");
 
@@ -69,7 +69,7 @@ public class registerAlarm {
     public void registerAM(String idIndex,String index) {
         SharedInit SI = new SharedInit(context);
         try {
-            SI.setSharedTimeLong(index,SI.getSharedTime(index));
+            SI.setSharedTimeLong(index, SI.getSharedTime(index));
 
             Intent intentMyService;
             intentMyService = new Intent(idIndex);
@@ -154,6 +154,7 @@ public class registerAlarm {
             e.printStackTrace();
         }
     }
+
     public void registerplace(){
         try {
             Calendar cal = Calendar.getInstance();

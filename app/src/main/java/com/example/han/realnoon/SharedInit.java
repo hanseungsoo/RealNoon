@@ -37,7 +37,7 @@ public class SharedInit {
         setSharedTime("2", 11, 30);
         setSharedTime("3", 15, 43);
         setSharedTime("4",18, 30);
-        setSharedTime("5", 21, 30);
+        setSharedTime("5", 20, 36);
         setSharedTime("6", 12, 30);
     }
     public void setSharedTime(String index,int hour ,int minute){

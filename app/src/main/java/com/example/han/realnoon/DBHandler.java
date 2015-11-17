@@ -368,6 +368,7 @@ public class DBHandler {
                 pattern[6]=1;
                 break;
             default:
+                return;
         }
 
         Long tt = si.getSharedTime(timeValue);
@@ -385,7 +386,7 @@ public class DBHandler {
             min = min%60;
         }
         Log.i("widget","new hour : " + hour +",minute:"+min);
-        //si.setSharedTime(timeValue, hour, min);
+        si.setSharedTime(timeValue, hour, min);
     }
 
     public void dummy_insert() {
