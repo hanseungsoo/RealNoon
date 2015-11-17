@@ -1,5 +1,6 @@
 package com.example.han.realnoon;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -60,6 +61,8 @@ public class AnniEditActivity extends FragmentActivity {
                 sendAnni.setSubject(TV.getText().toString());
                 if(dh.insertAnni(sendAnni)){
                     Toast.makeText(getApplicationContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AnniEditActivity.this,AnniActivity.class);
+                    startActivity(intent);
                     finish();
                 }
 

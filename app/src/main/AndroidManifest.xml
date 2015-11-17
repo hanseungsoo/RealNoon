@@ -69,6 +69,9 @@
         <activity
             android:name=".AnniEditActivity">
         </activity>
+        <activity
+            android:name=".AnniModify">
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>

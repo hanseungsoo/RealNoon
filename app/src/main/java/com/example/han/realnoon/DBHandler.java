@@ -47,6 +47,57 @@ public class DBHandler {
         }
 
         return true;
+    }
+    public boolean deleteAnni(Anni ani){
+        ArrayList<Anni> Annis = new ArrayList<>();
+        Cursor cursor= null;
+        try{
+            db.execSQL("DELETE FROM anni_profile WHERE _id="+ani.getSeq());
+
+        }catch (Exception e){
+            return false;
+        }
+
+        return true;
+    }
+    public ArrayList<Anni> selectAnniWithWhere(int month,int day){
+        ArrayList<Anni> Annis = new ArrayList<>();
+        Cursor cursor= null;
+        cursor = db.rawQuery("select * from anni_profile;", null);
+        Log.i("aaaa",""+cursor.getCount());
+        if(cursor.getCount() <= 0)
+            return null;
+        int col1 = cursor.getColumnIndex("_id");
+        int col2 = cursor.getColumnIndex("subject");
+        int col3 = cursor.getColumnIndex("year");
+        int col4 = cursor.getColumnIndex("month");
+        int col5 = cursor.getColumnIndex("cate");
+        while(cursor.moveToNext()){
+            Anni item = new Anni();
+            item.setSeq(cursor.getInt(col1));
+            item.setSubject(cursor.getString(col2));
+            item.setYear(cursor.getInt(col3));
+            item.setMonth(cursor.getInt(col4));
+            item.setCate(cursor.getString(col5));
+            Annis.add(item);
+        }
+        return Annis;
+
+    }
+
+
+
+    public boolean updateAnni(Anni ani){
+        ArrayList<Anni> Annis = new ArrayList<>();
+        try{
+            db.execSQL("UPDATE anni_profile SET " +
+                    "subject='"+ani.getSubject()+"', cate='"+ani.getCate()+"', year="+ani.getYear()+", month="+ani.getMonth()+", day="+ani.getDay()+" WHERE _id="+ani.getSeq()+";");
+
+        }catch (Exception e){
+            return false;
+        }
+
+        return true;
 
     }
 
@@ -54,14 +105,14 @@ public class DBHandler {
         ArrayList<Anni> Annis = new ArrayList<>();
         Cursor cursor= null;
         cursor = db.rawQuery("select * from anni_profile;", null);
+        Log.i("aaaa",""+cursor.getCount());
         if(cursor.getCount() <= 0)
             return null;
-        int col1 = cursor.getColumnIndex("seq");
+        int col1 = cursor.getColumnIndex("_id");
         int col2 = cursor.getColumnIndex("subject");
         int col3 = cursor.getColumnIndex("year");
         int col4 = cursor.getColumnIndex("month");
         int col5 = cursor.getColumnIndex("cate");
-        cursor.moveToFirst();
         while(cursor.moveToNext()){
             Anni item = new Anni();
             item.setSeq(cursor.getInt(col1));
