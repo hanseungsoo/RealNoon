@@ -136,14 +136,20 @@ public class noonWidget extends AppWidgetProvider {
         if (intent.getAction().equals("chae.widget.click1")) {
             CLICK_FLAG = true;
             noonDb();
-            Intent c_intent = new Intent(context, MainActivity.class);
-            MainActivity.mContext.startActivity(c_intent);
+            Log.i("widget","click2 Clicked");
+            Intent i = new Intent();
+            i.setClassName("com.example.han.realnoon", "com.example.han.realnoon.MainActivity");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
 
         if(intent.getAction().equals("chae.widget.click2")) {
             CLICK_FLAG = true;
-            Intent c_intent = new Intent(context, MainActivity.class);
-            MainActivity.mContext.startActivity(c_intent);
+            Log.i("widget", "click2 Clicked");
+            Intent i = new Intent();
+            i.setClassName("com.example.han.realnoon", "com.example.han.realnoon.MainActivity");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
 
         if (intent.getAction().equals("chae.widget.swap")) {
@@ -210,13 +216,14 @@ public class noonWidget extends AppWidgetProvider {
 
             updateViews.setTextViewText(R.id.widget_tv, "뉴스 추천");
             updateViews.setTextViewText(R.id.widget_title, GetNewsData.titlevec.get(0).toString());
-            updateViews.setTextViewText(R.id.widget_sub, GetNewsData.descvec.get(0).toString().substring(0,30));
+            updateViews.setTextViewText(R.id.widget_sub, GetNewsData.descvec.get(0).toString().substring(0,30)+"...");
 
 
             Intent click_intent = new Intent();
             click_intent.setAction("chae.widget.click2");
             PendingIntent pendingIntent_C = PendingIntent.getBroadcast(context, 0, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             updateViews.setOnClickPendingIntent(R.id.layout2, pendingIntent_C);
+
             String url = "http://222.116.135.76:8080/Noon/images/noon.png";
             ImageSize minImazeSize = new ImageSize(120,400);
             ImageLoader.getInstance().loadImage(url, minImazeSize, displayOptions, new SimpleImageLoadingListener() {
@@ -268,7 +275,7 @@ public class noonWidget extends AppWidgetProvider {
     public void noonDb() {
         DBHandler dbHandler = DBHandler.open(MainActivity.mContext, item);
         dbHandler.click_time();
-        dbHandler.food_favorite_insert();
+        //dbHandler.food_favorite_insert();
         dbHandler.close();
     }
 

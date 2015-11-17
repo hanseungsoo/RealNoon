@@ -71,7 +71,7 @@
             <ImageButton
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="0dp"
                 android:src="@drawable/swap"
                 android:id="@+id/widget_swap"
                 android:scaleType="fitXY"
@@ -80,7 +80,7 @@
             <ImageButton
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="0dp"
             android:src="@drawable/enter"
             android:id="@+id/widget_click"
             android:scaleType="fitXY"
@@ -93,7 +93,7 @@
                 android:src="@drawable/widget_button_l"
                 android:background="@android:color/transparent"
                 android:id="@+id/left_button"
-                android:paddingRight="10dp"
+                android:paddingRight="5dp"
                 android:layout_toLeftOf="@+id/right_button"/>
             <ImageButton
                 android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                 android:src="@drawable/widget_button_r"
                 android:background="@android:color/transparent"
                 android:id="@+id/right_button"
-                android:paddingRight="10dp"
+                android:paddingRight="5dp"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </RelativeLayout>

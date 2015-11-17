@@ -48,6 +48,7 @@
                 android:id="@+id/widget_sub"/>
 
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
