@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by CHAE on 2015-11-09.
  */
@@ -69,5 +72,48 @@ public class DBActivity extends Activity {
     public void Button4CLick(View v) {
         //거주지 정리
         dbHandler.abode_clean();
+    }
+
+    public void TimeChecked(View v) {
+        String timestr = "";
+        SharedInit si = new SharedInit(MainActivity.mContext);
+        Long tt = si.getSharedTime("0");
+        DateFormat df = new SimpleDateFormat("HH:mm:ss");
+        String str = df.format(tt);
+        String[] click_str = str.split(":");
+        timestr += "아침 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("1");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "아점 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("2");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "점심 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("3");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "점저 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("4");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "저녁 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("5");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "야식 - " + click_str[0] +":" + click_str[1] + "\n";
+        tt = si.getSharedTime("6");
+        df = new SimpleDateFormat("HH:mm:ss");
+        str = df.format(tt);
+        click_str = str.split(":");
+        timestr += "후식 - " + click_str[0] +":" + click_str[1];
+
+        tv.setText(timestr);
+
     }
 }

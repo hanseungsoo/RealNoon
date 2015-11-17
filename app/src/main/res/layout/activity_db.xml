@@ -15,18 +15,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/button1"
-            android:id="@+id/button21"
-            android:onClick="Button21CLick"
-            android:text="정리1"/>
+            android:id="@+id/button22"
+            android:onClick="Button22CLick"
+            android:text="정리"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button22"
-            android:onClick="Button22CLick"
-            android:text="정리2"
+            android:id="@+id/button21"
+            android:onClick="TimeChecked"
+            android:text="시간대 확인"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/button21"
-            android:layout_toEndOf="@+id/button21" />
+            android:layout_toRightOf="@+id/button22"
+            android:layout_toEndOf="@+id/button22" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

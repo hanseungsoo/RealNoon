@@ -13,7 +13,8 @@
                 <action android:name="chae.widget.update"/>
                 <action android:name="chae.widget.left"/>
                 <action android:name="chae.widget.right"/>
-                <action android:name="chae.widget.click"/>
+                <action android:name="chae.widget.click1"/>
+                <action android:name="chae.widget.click2"/>
 
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_configuration"/>

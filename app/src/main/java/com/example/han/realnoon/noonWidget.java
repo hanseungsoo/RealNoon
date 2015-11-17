@@ -133,9 +133,15 @@ public class noonWidget extends AppWidgetProvider {
             onUpdate(context, appWidgetManager, ids);
         }
 
-        if (intent.getAction().equals("chae.widget.click")) {
+        if (intent.getAction().equals("chae.widget.click1")) {
             CLICK_FLAG = true;
             noonDb();
+            Intent c_intent = new Intent(context, MainActivity.class);
+            MainActivity.mContext.startActivity(c_intent);
+        }
+
+        if(intent.getAction().equals("chae.widget.click2")) {
+            CLICK_FLAG = true;
             Intent c_intent = new Intent(context, MainActivity.class);
             MainActivity.mContext.startActivity(c_intent);
         }
@@ -173,7 +179,7 @@ public class noonWidget extends AppWidgetProvider {
             right_intent.putExtra("T_value", themaValue);
             left_intent.setAction("chae.widget.left");
             right_intent.setAction("chae.widget.right");
-            click_intent.setAction("chae.widget.click");
+            click_intent.setAction("chae.widget.click1");
             call_intent.setAction(Intent.ACTION_DIAL);
             call_intent.setData(Uri.parse("tel:" + ph));
             swap_intent.setAction("chae.widget.swap");
@@ -208,7 +214,7 @@ public class noonWidget extends AppWidgetProvider {
 
 
             Intent click_intent = new Intent();
-            click_intent.setAction("chae.widget.click");
+            click_intent.setAction("chae.widget.click2");
             PendingIntent pendingIntent_C = PendingIntent.getBroadcast(context, 0, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             updateViews.setOnClickPendingIntent(R.id.layout2, pendingIntent_C);
             String url = "http://222.116.135.76:8080/Noon/images/noon.png";
