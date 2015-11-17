@@ -27,7 +27,7 @@ public class noonWidget extends AppWidgetProvider {
     public static int themaValue=0;
     public static String t_Value="thema1";
     private static DisplayImageOptions displayOptions;
-    public static String contentValue="content1";
+    public static String contentValue="content2";
     public static String ph="000-0000";
     public static boolean CLICK_FLAG = false;
 
@@ -43,7 +43,7 @@ public class noonWidget extends AppWidgetProvider {
         super.onEnabled(context);
         themaValue = 0;
         t_Value = "thema1";
-        contentValue = "content1";
+        contentValue = "content2";
     }
 
     @Override
@@ -56,6 +56,7 @@ public class noonWidget extends AppWidgetProvider {
     public void onDisabled(Context context) {
         super.onDisabled(context);
         themaValue = 0;
+
     }
 
     @Override
@@ -135,9 +136,12 @@ public class noonWidget extends AppWidgetProvider {
         if (intent.getAction().equals("chae.widget.click")) {
             CLICK_FLAG = true;
             noonDb();
-
             Intent c_intent = new Intent(context, MainActivity.class);
             MainActivity.mContext.startActivity(c_intent);
+        }
+
+        if (intent.getAction().equals("chae.widget.swap")) {
+
         }
     }
 
@@ -150,7 +154,7 @@ public class noonWidget extends AppWidgetProvider {
             layoutId = R.layout.widget_layout;
             String thema = t_Value;
             updateViews = new RemoteViews(context.getPackageName(), layoutId);
-            updateViews.setTextViewText(R.id.widget_tv, thema);
+            updateViews.setTextViewText(R.id.widget_tv, "음식집 추천");
             item = contentValue(MainActivity.ThemaItem, thema);
             ph = item.phone;
             String[] phn = ph.split("[-]");
@@ -164,6 +168,7 @@ public class noonWidget extends AppWidgetProvider {
             Intent right_intent = new Intent();
             Intent click_intent = new Intent();
             Intent call_intent = new Intent();
+            Intent swap_intent = new Intent();
             left_intent.putExtra("T_value", themaValue);
             right_intent.putExtra("T_value", themaValue);
             left_intent.setAction("chae.widget.left");
@@ -171,14 +176,17 @@ public class noonWidget extends AppWidgetProvider {
             click_intent.setAction("chae.widget.click");
             call_intent.setAction(Intent.ACTION_DIAL);
             call_intent.setData(Uri.parse("tel:" + ph));
+            swap_intent.setAction("chae.widget.swap");
             PendingIntent pendingIntent_L = PendingIntent.getBroadcast(context, 0, left_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             PendingIntent pendingIntent_R = PendingIntent.getBroadcast(context, 0, right_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             PendingIntent pendingIntent_C = PendingIntent.getBroadcast(context, 0, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             PendingIntent pendingIntent_D = PendingIntent.getActivity(context, 0, call_intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent_S = PendingIntent.getBroadcast(context, 0, swap_intent, PendingIntent.FLAG_CANCEL_CURRENT);
             updateViews.setOnClickPendingIntent(R.id.call_button, pendingIntent_D);
             updateViews.setOnClickPendingIntent(R.id.left_button, pendingIntent_L);
             updateViews.setOnClickPendingIntent(R.id.right_button, pendingIntent_R);
             updateViews.setOnClickPendingIntent(R.id.widget_click, pendingIntent_C);
+            updateViews.setOnClickPendingIntent(R.id.widget_swap, pendingIntent_S);
 
             ImageSize minImazeSize = new ImageSize(120,400);
             ImageLoader.getInstance().loadImage(item.imageUrl, minImazeSize,displayOptions, new SimpleImageLoadingListener() {
@@ -194,19 +202,18 @@ public class noonWidget extends AppWidgetProvider {
 
             updateViews = new RemoteViews(context.getPackageName(), layoutId);
 
-            updateViews.setTextViewText(R.id.widget_tv, content);
-            //updateViews.setTextViewText(R.id.widget_title, (CharSequence) GetNewsData.datevec);
+            updateViews.setTextViewText(R.id.widget_tv, "뉴스 추천");
             updateViews.setTextViewText(R.id.widget_title, GetNewsData.titlevec.get(0).toString());
-            updateViews.setTextViewText(R.id.widget_sub, GetNewsData.descvec.get(0).toString());
+            updateViews.setTextViewText(R.id.widget_sub, GetNewsData.descvec.get(0).toString().substring(0,30));
 
 
             Intent click_intent = new Intent();
             click_intent.setAction("chae.widget.click");
             PendingIntent pendingIntent_C = PendingIntent.getBroadcast(context, 0, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            updateViews.setOnClickPendingIntent(R.id.widget_click, pendingIntent_C);
-
+            updateViews.setOnClickPendingIntent(R.id.layout2, pendingIntent_C);
+            String url = "http://222.116.135.76:8080/Noon/images/noon.png";
             ImageSize minImazeSize = new ImageSize(120,400);
-            ImageLoader.getInstance().loadImage(GetNewsData.imagevec.get(0).toString(), minImazeSize, displayOptions, new SimpleImageLoadingListener() {
+            ImageLoader.getInstance().loadImage(url, minImazeSize, displayOptions, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                     updateViews.setImageViewBitmap(R.id.widget_image, loadedImage);
@@ -255,7 +262,7 @@ public class noonWidget extends AppWidgetProvider {
     public void noonDb() {
         DBHandler dbHandler = DBHandler.open(MainActivity.mContext, item);
         dbHandler.click_time();
-        //dbHandler.widget_insert();
+        dbHandler.food_favorite_insert();
         dbHandler.close();
     }
 

@@ -17,10 +17,7 @@ public class DBActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_db);
         dbHandler = DBHandler.open(MainActivity.mContext);
-        dbHandler.dummy_insert();
-
         tv = (TextView)findViewById(R.id.dbtv);
-
     }
     @Override
     public void onStop() {

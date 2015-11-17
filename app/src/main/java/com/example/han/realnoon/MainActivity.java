@@ -143,9 +143,12 @@ public class MainActivity extends FragmentActivity {
 
 
         if(noonWidget.CLICK_FLAG == true) {
-            int position = noonWidget.themaValue;
-            actionbar.setSelectedNavigationItem(position);
-            noonWidget.CLICK_FLAG = false;
+            if(noonWidget.contentValue.equals("content1")) {
+                int position = noonWidget.themaValue;
+                actionbar.setSelectedNavigationItem(position);
+                noonWidget.CLICK_FLAG = false;
+            }
+
         }
 
         mHandler = new Handler(Looper.getMainLooper()){

@@ -157,8 +157,6 @@ public class optionActivity extends FragmentActivity {
             public void onClick(View v) {
                 Intent Service = new Intent(optionActivity.this, GpsService.class);
                 stopService(Service);
-
-
             }
         });
 
@@ -181,12 +179,12 @@ public class optionActivity extends FragmentActivity {
     }
 
     public void onClicked(View v) {
-        noonWidget.contentValue = "content2";
+        noonWidget.contentValue = "content1";
         MainActivity.mmmm();
     }
 
     public void onClicked2(View v) {
-        DBHandler dbHandler = DBHandler.open(MainActivity.mContext);
-        dbHandler.close();
+        Intent intent = new Intent(this, DBActivity.class);
+        startActivity(intent);
     }
 }
