@@ -17,31 +17,18 @@ import java.util.Vector;
 public class GetNewsData extends AsyncTask<Void,Void,Void> {
 
 
-    // 뉴스의 타이틀을 저장해 주는 객체 생성
-    static Vector<String> titlevec;
-    // 뉴스의 기사내용을 저장해 주는 객체 생성
-    static Vector<String> descvec;
-    // 링크 저장
-    static Vector<String> linkvec;
-    // 날짜
-    static Vector<String> datevec;
-    // 이미지
-    static Vector<String> imagevec;
-    // 웹사이트에 접속할 주소
+    NewsItem item;
+    // �쎒�궗�씠�듃�뿉 �젒�냽�븷 二쇱냼
     String uri = "http://rss.hankyung.com/new/news_main.xml";
-    // 웹사이트에 접속을 도와주는 클래스
+    // �쎒�궗�씠�듃�뿉 �젒�냽�쓣 �룄��二쇰뒗 �겢�옒�뒪
     URL url;
-    // XML문서의 내용을 임시로 저장할 변수
+    // XML臾몄꽌�쓽 �궡�슜�쓣 �엫�떆濡� ���옣�븷 蹂��닔
     String tagname = "", title="", desc="", link ="", image = "";
-    // 데이터의 내용을 모두 읽어드렸는지에 대한 정보를 저장
+    // �뜲�씠�꽣�쓽 �궡�슜�쓣 紐⑤몢 �씫�뼱�뱶�졇�뒗吏��뿉 ���븳 �젙蹂대�� ���옣
     Boolean flag = null;
     @Override
     protected void onPreExecute() {
-        imagevec = new Vector<>();
-        datevec = new Vector<>();
-        linkvec = new Vector<>();
-        descvec = new Vector<>();
-        titlevec = new Vector<>();
+        NewsItem item = new Item;
         super.onPreExecute();
     }
 
@@ -49,26 +36,26 @@ public class GetNewsData extends AsyncTask<Void,Void,Void> {
     protected Void doInBackground(Void... params) {
         Boolean flag = false;
         try {
-            //xml문서를 읽고 해석해줄 수 있는 객체를 선언
+            //xml臾몄꽌瑜� �씫怨� �빐�꽍�빐以� �닔 �엳�뒗 媛앹껜瑜� �꽑�뼵
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            //네임스페이스 사용여부
+            //�꽕�엫�뒪�럹�씠�뒪 �궗�슜�뿬遺�
             factory.setNamespaceAware(true);
-            //실제 xml문서를 읽어 드리면서 데이터를 추출해주는 객체 선언
+            //�떎�젣 xml臾몄꽌瑜� �씫�뼱 �뱶由щ㈃�꽌 �뜲�씠�꽣瑜� 異붿텧�빐二쇰뒗 媛앹껜 �꽑�뼵
             XmlPullParser xpp = factory.newPullParser();
 
-            // 웹사이트에 접속
+            // �쎒�궗�씠�듃�뿉 �젒�냽
             url = new URL(uri);
-            // 사이트 접속후에 xml 문서를 읽어서 가져옴
+            // �궗�씠�듃 �젒�냽�썑�뿉 xml 臾몄꽌瑜� �씫�뼱�꽌 媛��졇�샂
             InputStream in = url.openStream();
-            // 웹사이트로부터 받아온 xml문서를 읽어드리면서 데이터를 추출해 주는 XmlPullParser객체로 넘겨줌
+            // �쎒�궗�씠�듃濡쒕��꽣 諛쏆븘�삩 xml臾몄꽌瑜� �씫�뼱�뱶由щ㈃�꽌 �뜲�씠�꽣瑜� 異붿텧�빐 二쇰뒗 XmlPullParser媛앹껜濡� �꽆寃⑥쨲
             xpp.setInput(in, "utf-8");
 
-            // 이벤트 내용을 사용하기 위해서 변수 선언
+            // �씠踰ㅽ듃 �궡�슜�쓣 �궗�슜�븯湲� �쐞�빐�꽌 蹂��닔 �꽑�뼵
             int eventType = xpp.getEventType();
-            // 반복문을 사용하여 문서의 끝까지 읽어 들이면서 데이터를 추출하여 각각의 벡터에 저장
+            // 諛섎났臾몄쓣 �궗�슜�븯�뿬 臾몄꽌�쓽 �걹源뚯� �씫�뼱 �뱾�씠硫댁꽌 �뜲�씠�꽣瑜� 異붿텧�븯�뿬 媛곴컖�쓽 踰≫꽣�뿉 ���옣
             while(eventType != XmlPullParser.END_DOCUMENT ) {
                 if(eventType == XmlPullParser.START_TAG) {
-                    // 태그의 이름을 알아야 텍스트를 저장하기에 태그이름을 읽어서 변수에 저장
+                    // �깭洹몄쓽 �씠由꾩쓣 �븣�븘�빞 �뀓�뒪�듃瑜� ���옣�븯湲곗뿉 �깭洹몄씠由꾩쓣 �씫�뼱�꽌 蹂��닔�뿉 ���옣
                     if(xpp.getName().equals("item")){
                         flag = true;
                     }
@@ -76,32 +63,36 @@ public class GetNewsData extends AsyncTask<Void,Void,Void> {
                 } else if(eventType == XmlPullParser.TEXT) {
                     if(flag){
                         if(tagname.equals("title")) title += xpp.getText();
-                            // 태그 이름이 description과 같다면 desc변수에 저장
+                            // �깭洹� �씠由꾩씠 description怨� 媛숇떎硫� desc蹂��닔�뿉 ���옣
                         else if (tagname.equals("link")) link += xpp.getText();
                         else if (tagname.equals("description")) desc += xpp.getText();
                         else if (tagname.equals("image")) image += xpp.getText();
                     }
-                    // 태그 이름이 title과 같다면 변수에 title 저장
+                    // �깭洹� �씠由꾩씠 title怨� 媛숇떎硫� 蹂��닔�뿉 title ���옣
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    // end tag 이름을 얻어옴
+                    // end tag �씠由꾩쓣 �뼸�뼱�샂
                     tagname = xpp.getName();
-                    // end tag 이름이 item이라면 저장한 변수 title과 desc를 벡터에 저장
+                    // end tag �씠由꾩씠 item�씠�씪硫� ���옣�븳 蹂��닔 title怨� desc瑜� 踰≫꽣�뿉 ���옣
                     if(tagname.equals("item")) {
-                        titlevec.add(title);
-                        descvec.add(desc);
-                        imagevec.add(image);
-                        linkvec.add(link);
-                        // 변수 초기화
+                       
+                        item.setTitle(title);
+                        item.setDesc(desc);
+                        item.setImageUrl(image);
+                        item.setLink(link);
+                        
+                        NewsNews.add(item);
+                        
+                        // 蹂��닔 珥덇린�솕
                         title="";
                         desc="";
                         link="";
                         image="";
                     }
                 }
-                // 다음 이벤트를 넘김
+                // �떎�쓬 �씠踰ㅽ듃瑜� �꽆源�
                 eventType = xpp.next();
             }
-            // 모든 xml문서를 읽어드렸다면
+            // 紐⑤뱺 xml臾몄꽌瑜� �씫�뼱�뱶�졇�떎硫�
             flag = true;
 
         } catch(Exception e) {

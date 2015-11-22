@@ -32,12 +32,12 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
         DBHandler dh = DBHandler.open(MainActivity.mContext);
         staticMerge.finish_food[0] = dh.selectfood(staticMerge.dong);
         if(staticMerge.finish_food[0].equals("")){
-            staticMerge.finish_food[0] = "편의점";
+            staticMerge.finish_food[0] = "�렪�쓽�젏";
         }
 
         try{
             LocationManager locationManager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE);
-            int radius = 1000; // 중심 좌표부터의 반경거리. 특정 지역을 중심으로 검색하려고 할 경우 사용. meter 단위 (0 ~ 10000)
+            int radius = 1000; // 以묒떖 醫뚰몴遺��꽣�쓽 諛섍꼍嫄곕━. �듅�젙 吏��뿭�쓣 以묒떖�쑝濡� 寃��깋�븯�젮怨� �븷 寃쎌슦 �궗�슜. meter �떒�쐞 (0 ~ 10000)
             int page = 1;
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             double latitude = location.getLatitude();
@@ -50,11 +50,11 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                     public void onSuccess(List<Item> itemList) {
                         if(itemList.size() == 0){
                             Item item = new Item();
-                            item.title = "주변에";
-                            item.category = "음식점이 없습니다.";
+                            item.title = "二쇰��뿉";
+                            item.category = "�쓬�떇�젏�씠 �뾾�뒿�땲�떎.";
                             item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                             item.address = "(X)address";
-                            item.phone = "추천할만한";
+                            item.phone = "異붿쿇�븷留뚰븳";
                             MainActivity.ThemaItem.set(0, item);
                             MainActivity.mHandler.sendEmptyMessage(1);
                             registerAlarm rA = new registerAlarm(MainActivity.mContext);
@@ -80,12 +80,15 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                 public void onSuccess(List<Item> itemList) {
                     if(itemList.size() == 0){
                         Item item = new Item();
-                        item.title = "주변에";
+                        item.title = "二쇰��뿉";
                         item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
-                        item.category = "음식점이 없습니다.";
+                        item.category = "�쓬�떇�젏�씠 �뾾�뒿�땲�떎.";
                         item.address = "(X)address";
-                        item.phone = "추천할만한";
+                        item.phone = "異붿쿇�븷留뚰븳";
                         MainActivity.ThemaItem.set( 1 , item);
+                        registerAlarm rA = new registerAlarm(MainActivity.mContext);
+                        rA.AlarmCancel("ACTION.SET.NEWS");
+                        rA.registerNews(60*60*1000);
                     }else{
                         MainActivity.ThemaItem.set(1, itemList.get(0));
                     }
@@ -101,12 +104,15 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                 public void onSuccess(List<Item> itemList) {
                     if(itemList.size() == 0){
                         Item item = new Item();
-                        item.title = "주변에";
-                        item.category = "음식점이 없습니다.";
+                        item.title = "二쇰��뿉";
+                        item.category = "�쓬�떇�젏�씠 �뾾�뒿�땲�떎.";
                         item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                         item.address = "(X)address";
-                        item.phone = "추천할만한";
+                        item.phone = "異붿쿇�븷留뚰븳";
                         MainActivity.ThemaItem.set(2, item);
+                        registerAlarm rA = new registerAlarm(MainActivity.mContext);
+                        rA.AlarmCancel("ACTION.SET.NEWS");
+                        rA.registerNews(60*60*1000);
                     }else{
                         MainActivity.ThemaItem.set(2, itemList.get(0));
                     }
@@ -123,12 +129,15 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
 
                     if (itemList.size() == 0) {
                         Item item = new Item();
-                        item.title = "주변에";
-                        item.category = "음식점이 없습니다.";
+                        item.title = "二쇰��뿉";
+                        item.category = "�쓬�떇�젏�씠 �뾾�뒿�땲�떎.";
                         item.address = "(X)address";
                         item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
-                        item.phone = "추천할만한";
+                        item.phone = "異붿쿇�븷留뚰븳";
                         MainActivity.ThemaItem.set(3, item);
+                        registerAlarm rA = new registerAlarm(MainActivity.mContext);
+                        rA.AlarmCancel("ACTION.SET.NEWS");
+                        rA.registerNews(60*60*1000);
                     } else {
                         MainActivity.ThemaItem.set(3, itemList.get((int) (Math.random() * 15)));
                     }
@@ -154,7 +163,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
         ArrayList<String> foodDB = new ArrayList<String>();
 
         try {
-            Log.i("aaaa", "-----출출1" + params[0]);
+            Log.i("aaaa", "-----異쒖텧1" + params[0]);
             URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[0]);
             URLConnection conn = (HttpURLConnection) url.openConnection();
             HttpURLConnection http = (HttpURLConnection) conn;
@@ -217,7 +226,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
 
         if(Annis == null){
             try {
-                Log.i("aaaa", "-----출출2" + params[1]);
+                Log.i("aaaa", "-----異쒖텧2" + params[1]);
                 URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[1]);
                 URLConnection conn = (HttpURLConnection) url.openConnection();
                 HttpURLConnection http = (HttpURLConnection) conn;
@@ -265,7 +274,7 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
             }
             if(food_nameAnniv.equals("empty")){
                 try {
-                    Log.i("aaaa", "-----출출3" + params[2]);
+                    Log.i("aaaa", "-----異쒖텧3" + params[2]);
                     URL url = new URL("http://222.116.135.76:8080/Noon/createJson.jsp?" + params[2]);
                     URLConnection conn = (HttpURLConnection) url.openConnection();
                     HttpURLConnection http = (HttpURLConnection) conn;
@@ -315,11 +324,11 @@ public class foodDbJson extends AsyncTask<String,Void,Void> {
                 }
                 if(food_nameAnniv.equals("empty")){
                     Item item = new Item();
-                    item.title = "오늘은";
-                    item.category = "없습니다";
+                    item.title = "�삤�뒛��";
+                    item.category = "�뾾�뒿�땲�떎";
                     item.imageUrl = "http://222.116.135.76:8080/Noon/images/noon.png";
                     item.address = "(X)address";
-                    item.phone = "기념일이";
+                    item.phone = "湲곕뀗�씪�씠";
                     MainActivity.ThemaItem.set( 0, item);
                     staticMerge.finish_food[1]="empty";
                 }else{

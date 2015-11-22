@@ -1,12 +1,15 @@
 package com.example.han.realnoon;
 
+import android.R;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -61,6 +64,7 @@ public class MainActivity extends FragmentActivity {
 
     //Data
     public static ArrayList<Item> ThemaItem = new ArrayList<Item>();
+    public static ArrayList<NewsItem> NewsNews = new ArrayList<NewsItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class MainActivity extends FragmentActivity {
         Intent a = new Intent(this, GpsService.class);
         startService(a);
 
-        //초기화&알람
+        //珥덇린�솕&�븣�엺
         SharedInit SI = new SharedInit(getApplicationContext());
         registerAlarm rA = new registerAlarm(getApplicationContext());
         if(!SI.getSharedTrue("isCreate")){
@@ -89,10 +93,7 @@ public class MainActivity extends FragmentActivity {
 
 
 
-
-
-
-        //바인딩
+        //諛붿씤�뵫
         actionbar = getActionBar();
 
 
@@ -160,7 +161,22 @@ public class MainActivity extends FragmentActivity {
                         setContentView(R.layout.activity_news);
                         setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
                         TextView newstitle = (TextView)findViewById(R.id.newsTitle);
-                        newstitle.setText(GetNewsData.titlevec.get(0).toString());
+                        TextView newsdesc = (TextView)findViewById(R.id.newsDesc);
+                        ImageView newsimage = (ImageView)findViewById(R.id.newsImage);
+                        Button newsbutton = (Button)findViewById(R.id.newButton);
+                        
+                        newstitle.setText(NewsNews.get(0).getTitle());
+                        newsdesc.setText(NewsNews.get(0).getDesc());
+                        newsimage.setTag(NewsNews.get(0).getImageUrl());
+                        new DownloadImageTask().execute(newsimage);
+                        
+                        Uri uri = Uri.parse(NewsNews.get(0).getLink());
+                        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                        startActivity(intent);
+
+                    
+                        
                         break;
                     case 1:
                         setContentView(R.layout.activity_main);
@@ -245,6 +261,22 @@ public class MainActivity extends FragmentActivity {
             }else if(position ==3) {
                 setContentView(R.layout.activity_news);
                 setDrawer(ActionBar.NAVIGATION_MODE_STANDARD);
+                
+                TextView newstitle = (TextView)findViewById(R.id.newsTitle);
+                TextView newsdesc = (TextView)findViewById(R.id.newsDesc);
+                ImageView newsimage = (ImageView)findViewById(R.id.newsImage);
+                Button newsbutton = (Button)findViewById(R.id.newButton);
+                
+                newstitle.setText(NewsNews.get(0).getTitle());
+                newsdesc.setText(NewsNews.get(0).getDesc());
+                newsimage.setTag(NewsNews.get(0).getImageUrl());
+                new DownloadImageTask().execute(newsimage);
+                
+                Uri uri = Uri.parse(NewsNews.get(0).getLink());
+                Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                startActivity(intent);
+
             }
         }
     }
@@ -346,7 +378,9 @@ public class MainActivity extends FragmentActivity {
                         cateTv.setText("" + in1.category);
                         addrTv.setText("" + in1.address);
 
-                        new DownloadImageTask().execute(in1.imageUrl);
+                        
+                        foodImg.setTag(in1.imageUrl);
+                        new DownloadImageTask().execute(foodImg);
                         marker.setItemName("Default Marker");
                         marker.setTag(0);
                         marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
@@ -365,8 +399,10 @@ public class MainActivity extends FragmentActivity {
                         telTv.setText("" + in1.phone);
                         cateTv.setText("" + in1.category);
                         addrTv.setText("" + in1.address);
-                        new DownloadImageTask().execute(in1.imageUrl);
-
+                        
+                        
+                        foodImg.setTag(in1.imageUrl);
+                        new DownloadImageTask().execute(foodImg);
                         marker.setItemName("Default Marker");
                         marker.setTag(0);
                         marker.setMapPoint(MapPoint.mapPointWithGeoCoord(in1.latitude, in1.longitude));
@@ -385,7 +421,8 @@ public class MainActivity extends FragmentActivity {
                         telTv.setText("" + in1.phone);
                         cateTv.setText("" + in1.category);
                         addrTv.setText("" + in1.address);
-                        new DownloadImageTask().execute(in1.imageUrl);
+                        foodImg.setTag(in1.imageUrl);
+                        new DownloadImageTask().execute(foodImg);
 
                         marker.setItemName("Default Marker");
                         marker.setTag(0);
@@ -405,7 +442,8 @@ public class MainActivity extends FragmentActivity {
                         telTv.setText("" + in1.phone);
                         cateTv.setText("" + in1.category);
                         addrTv.setText("" + in1.address);
-                        new DownloadImageTask().execute(in1.imageUrl);
+                        foodImg.setTag(in1.imageUrl);
+                        new DownloadImageTask().execute(foodImg);
 
                         marker.setItemName("Default Marker");
                         marker.setTag(0);
@@ -428,13 +466,13 @@ public class MainActivity extends FragmentActivity {
 
         }
     }
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadImageTask extends AsyncTask<ImageView, Void, Bitmap> {
 
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
+        protected Bitmap doInBackground(ImageView... imageViews) {
+            String urldisplay = imageViews[0];
             Bitmap mIcon11 = null;
             try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
+                InputStream in = new java.net.URL((String)urldisplay.getTag()).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
@@ -444,7 +482,7 @@ public class MainActivity extends FragmentActivity {
         }
 
         protected void onPostExecute(Bitmap result) {
-            foodImg.setImageBitmap(result);
+            urldisplay.setImageBitmap(result);
         }
     }
 

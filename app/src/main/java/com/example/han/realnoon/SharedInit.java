@@ -33,9 +33,9 @@ public class SharedInit {
         setSharedTrue("6", true);
 
         setSharedTime("0", 6, 30);
-        setSharedTime("1", 8, 30);
+        setSharedTime("1", 9, 30);
         setSharedTime("2", 11, 30);
-        setSharedTime("3", 15, 43);
+        setSharedTime("3", 15, 30);
         setSharedTime("4",18, 30);
         setSharedTime("5", 20, 36);
         setSharedTime("6", 12, 30);
